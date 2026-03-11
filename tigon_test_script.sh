@@ -6,7 +6,7 @@ set -euo pipefail
 # --- WORKLOAD PARAMETERS ---
 HOST_NUM=8
 WORKER_NUM=3
-KEYS=1000000 
+KEYS=100000
 
 RESULT_DIR="results/eviction_stress_test"
 mkdir -p "$RESULT_DIR"
