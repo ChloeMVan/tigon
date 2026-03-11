@@ -214,14 +214,24 @@ template <class Workload, class Protocol> class Executor : public Worker {
 		// once all workers are stop, we need to process the replication
 		// requests
 
+		LOG(INFO) << "[progress] Executor " << id << " entering CLEANUP wait.";
+		auto cleanup_heartbeat = std::chrono::steady_clock::now();
 		while (static_cast<ExecutorStatus>(worker_status.load()) != ExecutorStatus::CLEANUP) {
 			process_request();
+			auto now = std::chrono::steady_clock::now();
+			if (std::chrono::duration_cast<std::chrono::seconds>(now - cleanup_heartbeat).count() >= 10) {
+				LOG(INFO) << "[progress] Executor " << id << " still in CLEANUP wait (heartbeat).";
+				cleanup_heartbeat = now;
+			}
 		}
 
+		LOG(INFO) << "[progress] Executor " << id << " CLEANUP done, processing final request.";
 		process_request();
 		n_complete_workers.fetch_add(1);
 
+		LOG(INFO) << "[progress] Executor " << id << " calling global_ebr_meta->print_statistics().";
                 global_ebr_meta->print_statistics();
+		LOG(INFO) << "[progress] Executor " << id << " print_statistics done.";
 
 		LOG(INFO) << "Executor " << id << " exits.";
 	}
@@ -261,10 +271,12 @@ template <class Workload, class Protocol> class Executor : public Worker {
 			for (auto i = 0u; i < message_stats.size(); i++) {
 				LOG(INFO) << "message stats, type: " << i << " count: " << message_stats[i] << " total size: " << message_sizes[i];
 			}
+			LOG(INFO) << "[progress] Executor 0: message stats done, entering save_cdf (path empty=" << context.cdf_path.empty() << ").";
 			percentile.save_cdf(context.cdf_path);
-
+			LOG(INFO) << "[progress] Executor 0: save_cdf done, entering correctness_test.";
                         // do a correctness test for the current workload
                         workload.perform_correctness_test(context);
+			LOG(INFO) << "[progress] Executor 0: correctness_test done, onExit complete.";
 		}
 	}
 
