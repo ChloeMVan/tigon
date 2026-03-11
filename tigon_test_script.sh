@@ -15,11 +15,11 @@ mkdir -p "$RESULT_DIR"
 # Shrink the budget to see when Clock starts failing
 BUDGETS=(
   $((1024*1024*200))  # 200MB
-  $((1024*1024*128))  # 128MB
-  $((1024*1024*64))   # 64MB
+  # $((1024*1024*128))  # 128MB
+  # $((1024*1024*64))   # 64MB
   $((1024*1024*32))   # 32MB
-  $((1024*1024*16))   # 16MB
-  $((1024*1024*10))   # 10MB
+  # $((1024*1024*16))   # 16MB
+  # $((1024*1024*10))   # 10MB
 )
 
 POLICIES=("Clock" "LRU")
@@ -118,20 +118,20 @@ run_experiment() {
 
 # run_experiment "test_name" "query_type" zipf_theta cross_ratio rw_ratio
 
-echo "=== 1. CONTROL BASELINE ==="
-run_experiment "control_mixed_zipf099_cross20_rw50" "mixed" 0.7 20 50
+# echo "=== 1. CONTROL BASELINE ==="
+# run_experiment "control_mixed_zipf099_cross20_rw50" "mixed" 0.7 20 50
 
-echo "=== 2. CAPACITY STRESS ==="
-run_experiment "stress_mixed_zipf05_cross100_rw50" "mixed" 0.5 100 50
+# echo "=== 2. CAPACITY STRESS ==="
+# run_experiment "stress_mixed_zipf05_cross100_rw50" "mixed" 0.5 100 50
 
-echo "=== 3. SCAN POLLUTION STRESS ==="
-run_experiment "stress_scan_zipf0_cross100_rw50" "scan" 0 100 50
+# echo "=== 3. SCAN POLLUTION STRESS ==="
+# run_experiment "stress_scan_zipf0_cross100_rw50" "scan" 0 100 50
 
 echo "=== 4. WRITE-HEAVY DIRTY EVICTION  ==="
 run_experiment "stress_rmw_zipf05_cross100_rw10" "rmw" 0.5 100 10
 
-echo "=== 5. READ-HEAVY HOTSPOT REUSE ==="
-run_experiment "stress_mixed_zipf099_cross80_rw95" "mixed" 0.99 80 95
+# echo "=== 5. READ-HEAVY HOTSPOT REUSE ==="
+# run_experiment "stress_mixed_zipf099_cross80_rw95" "mixed" 0.99 80 95
 
 echo "Done."
 echo "Logs are in $RESULT_DIR"
