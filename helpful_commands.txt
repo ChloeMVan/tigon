@@ -2,3 +2,11 @@ kills ivshmem and qemu
 
 python3 /users/Chloevan/tigon/emulation/vm_lib/start_vm.py clean_ivshmem --shmem_dir /mnt/cxl_mem
 
+# Kill existing QEMU and ivshmem so start_vm doesn’t refuse to start
+sudo pkill -9 qemu-system
+sudo pkill -9 ivshmem
+sleep 3
+
+# If you use ivshmem and had /mnt/cxl_mem mounted:
+sudo python3 emulation/vm_lib/start_vm.py clean_ivshmem --shmem_dir /mnt/cxl_mem
+sudo umount /mnt/cxl_mem 2>/dev/null || true
