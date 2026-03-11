@@ -238,6 +238,8 @@ template <class Workload, class Protocol> class Executor : public Worker {
 
 	void onExit() override
 	{
+		// Only executor 0 does expensive percentile stats (nth() triggers full sort); workers 1+ skip to avoid shutdown hang.
+		if (id == 0) {
 		LOG(INFO) << "Worker " << id << " latency: " << percentile.nth(50) << " us (50%) " << percentile.nth(75) << " us (75%) " << percentile.nth(95)
 			  << " us (95%) " << percentile.nth(99) << " us (99%). dist txn latency: " << dist_latency.nth(50) << " us (50%) "
 			  << dist_latency.nth(75) << " us (75%) " << dist_latency.nth(95) << " us (95%) " << dist_latency.nth(99) << " us (99%) "
@@ -267,7 +269,6 @@ template <class Workload, class Protocol> class Executor : public Worker {
 			  << " commit_replication " << this->dist_txn_commit_replication_time_pct.avg() << " us, "
 			  << " commit_release_lock " << this->dist_txn_commit_unlock_time_pct.avg() << " us \n";
 
-		if (id == 0) {
 			for (auto i = 0u; i < message_stats.size(); i++) {
 				LOG(INFO) << "message stats, type: " << i << " count: " << message_stats[i] << " total size: " << message_sizes[i];
 			}
