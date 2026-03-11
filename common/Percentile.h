@@ -69,14 +69,10 @@ template <class T> class Percentile {
 
 	void save_cdf(const std::string &path)
 	{
-		if (data_.size() == 0) {
+		if (path.empty() || data_.size() == 0) {
 			return;
 		}
 		checkSort();
-
-		if (path.empty()) {
-			return;
-		}
 
 		std::ofstream cdf;
 		cdf.open(path);
