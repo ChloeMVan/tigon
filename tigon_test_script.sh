@@ -91,11 +91,12 @@ run_one() {
   } | tee "$LOG_FILE"
 
   # Full YCSB call matching: ./scripts/run.sh YCSB TwoPLPasha 8 3 rmw 300000 50 0.7 10 1 0 1 Clock OnDemand 200000000 1 WriteThrough None 30 10 BLACKHOLE 20000 0 0
+  # 2>&1 so stderr (glog, benchmark output) is also captured in the log file
   ./scripts/run.sh YCSB "$SYSTEM" "$HOST_NUM" "$WORKER_NUM" "$QUERY_TYPE" \
     "$KEYS" "$RW_RATIO" "$ZIPF_THETA" "$CROSS_RATIO" \
     "$USE_CXL_TRANS" "$USE_OUTPUT_THREAD" "$ENABLE_MIGRATION_OPTIMIZATION" "$POLICY" "$WHEN_TO_MOVE_OUT" "$BUDGET" \
     "$ENABLE_SCC" "$SCC_MECH" "$PRE_MIGRATE" "$TIME_TO_RUN" "$TIME_TO_WARMUP" "$LOGGING_TYPE" "$EPOCH_LEN" "$MODEL_CXL_SEARCH" "$GATHER_OUTPUTS" \
-    | tee -a "$LOG_FILE"
+    2>&1 | tee -a "$LOG_FILE"
 
   sleep 5
 }
@@ -118,20 +119,20 @@ run_experiment() {
 
 # run_experiment "test_name" "query_type" zipf_theta cross_ratio rw_ratio
 
-# echo "=== 1. CONTROL BASELINE ==="
-# run_experiment "control_mixed_zipf099_cross20_rw50" "mixed" 0.7 20 50
+echo "=== 1. CONTROL BASELINE ==="
+run_experiment "control_mixed_zipf099_cross20_rw50" "mixed" 0.7 20 50
 
-# echo "=== 2. CAPACITY STRESS ==="
-# run_experiment "stress_mixed_zipf05_cross100_rw50" "mixed" 0.5 100 50
+echo "=== 2. CAPACITY STRESS ==="
+run_experiment "stress_mixed_zipf05_cross100_rw50" "mixed" 0.5 100 50
 
-# echo "=== 3. SCAN POLLUTION STRESS ==="
-# run_experiment "stress_scan_zipf0_cross100_rw50" "scan" 0 100 50
+echo "=== 3. SCAN POLLUTION STRESS ==="
+run_experiment "stress_scan_zipf0_cross100_rw50" "scan" 0 100 50
 
 echo "=== 4. WRITE-HEAVY DIRTY EVICTION  ==="
 run_experiment "stress_rmw_zipf05_cross100_rw10" "rmw" 0.5 100 10
 
-# echo "=== 5. READ-HEAVY HOTSPOT REUSE ==="
-# run_experiment "stress_mixed_zipf099_cross80_rw95" "mixed" 0.99 80 95
+echo "=== 5. READ-HEAVY HOTSPOT REUSE ==="
+run_experiment "stress_mixed_zipf099_cross80_rw95" "mixed" 0.99 80 95
 
 echo "Done."
 echo "Logs are in $RESULT_DIR"
