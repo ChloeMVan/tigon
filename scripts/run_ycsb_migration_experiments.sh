@@ -5,7 +5,14 @@
 # Results written to .txt files for throughput, latency, and cache hit rate analysis.
 # Execute from the Tigon repository root.
 #
-# Usage: ./scripts/run_ycsb_migration_experiments.sh
+# Run in chunks by read/write mix to avoid long runs:
+#   0 = all (rw 10, 50, 90)  — 108 runs
+#   1 = read-heavy only (rw 90)  — 36 runs
+#   2 = mid only (rw 50)  — 36 runs
+#   3 = write-heavy only (rw 10)  — 36 runs
+#
+# Usage: ./scripts/run_ycsb_migration_experiments.sh [CHUNK]
+#   e.g. ./scripts/run_ycsb_migration_experiments.sh 1   # read-heavy only
 #
 
 set -euo pipefail
@@ -23,7 +30,7 @@ USE_CXL_TRANS=1
 USE_OUTPUT_THREAD=0
 ENABLE_MIGRATION_OPTIMIZATION=1
 WHEN_TO_MOVE_OUT="Reactive"
-HW_CC_BUDGET=$((1024 * 1024 * 200))
+HW_CC_BUDGET=$((100000000))
 ENABLE_SCC=1
 SCC_MECH="WriteThrough"
 PRE_MIGRATE="None"
@@ -34,17 +41,38 @@ EPOCH_LEN=20000
 MODEL_CXL_SEARCH=0
 GATHER_OUTPUT=0
 
-# Sweep dimensions
+# Chunk: 0=all, 1=read-heavy (rw90), 2=mid (rw50), 3=write-heavy (rw10)
+CHUNK="${1:-0}"
+
+# Sweep dimensions (RW_RATIOS set from CHUNK below)
 POLICIES=(Clock LRU)
 QUERY_TYPES=(scan rmw)
 CROSS_RATIOS=(10 50 90)
 ZIPF_THETAS=(0.5 0.7 0.99)
-RW_RATIOS=(10 50 90)
+case "$CHUNK" in
+  0) RW_RATIOS=(10 50 90) ;;
+  1) RW_RATIOS=(90) ;;   # read-heavy
+  2) RW_RATIOS=(50) ;;   # mid
+  3) RW_RATIOS=(10) ;;   # write-heavy
+  *) echo "Unknown CHUNK: $CHUNK. Use 0=all, 1=read-heavy, 2=mid, 3=write-heavy"; exit 1 ;;
+esac
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 REPO_ROOT=$(cd -- "$SCRIPT_DIR/.." &>/dev/null && pwd)
 mkdir -p "$REPO_ROOT/$RESULTS_DIR"
 RESULTS_ABS="$REPO_ROOT/$RESULTS_DIR"
+
+# shellcheck source=utilities.sh
+source "$SCRIPT_DIR/utilities.sh"
+kill_prev_exps() {
+  local n=$1
+  local i
+  echo "Killing previous experiments (bench_ycsb) on $n host(s)..."
+  for (( i = 0; i < n; i++ )); do
+    ssh_command "pkill bench_ycsb || true" "$i" 2>/dev/null || true
+  done
+  sleep 2
+}
 
 # run.sh YCSB: PROTOCOL HOST_NUM WORKER_NUM QUERY_TYPE KEYS RW_RATIO ZIPF_THETA CROSS_RATIO
 #             USE_CXL_TRANS USE_OUTPUT_THREAD ENABLE_MIGRATION_OPTIMIZATION MIGRATION_POLICY WHEN_TO_MOVE_OUT HW_CC_BUDGET
@@ -61,6 +89,8 @@ run_one() {
   local BUDGET_MB=$((HW_CC_BUDGET / 1024 / 1024))
   local SAFE_LABEL=$(echo "$LABEL" | tr ' ' '_' | tr -cd '[:alnum:]_.-')
   local OUT_FILE="${RESULTS_ABS}/${SAFE_LABEL}.txt"
+
+  kill_prev_exps "$HOST_NUM"
 
   echo "=========================================================="
   echo "Running: $LABEL"
@@ -88,7 +118,14 @@ run_one() {
 }
 
 # --- Main sweep: policy × query_type × cross × zipf × rw_ratio × repeats ---
-echo "YCSB migration experiments (2 VMs)"
+case "$CHUNK" in
+  0) CHUNK_NAME="all" ;;
+  1) CHUNK_NAME="read-heavy (rw=90)" ;;
+  2) CHUNK_NAME="mid (rw=50)" ;;
+  3) CHUNK_NAME="write-heavy (rw=10)" ;;
+  *) CHUNK_NAME="chunk$CHUNK" ;;
+esac
+echo "YCSB migration experiments (2 VMs) — chunk: $CHUNK_NAME"
 echo "  policies: ${POLICIES[*]}"
 echo "  query_types: ${QUERY_TYPES[*]}"
 echo "  cross_ratio: ${CROSS_RATIOS[*]}"
