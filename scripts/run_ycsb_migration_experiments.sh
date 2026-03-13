@@ -90,6 +90,11 @@ run_one() {
   local SAFE_LABEL=$(echo "$LABEL" | tr ' ' '_' | tr -cd '[:alnum:]_.-')
   local OUT_FILE="${RESULTS_ABS}/${SAFE_LABEL}.txt"
 
+  if [[ -f "$OUT_FILE" ]]; then
+    echo "Skipping (exists): $LABEL"
+    return 1
+  fi
+
   kill_prev_exps "$HOST_NUM"
 
   echo "=========================================================="
@@ -144,8 +149,7 @@ for policy in "${POLICIES[@]}"; do
           for ((rep = 1; rep <= REPEATS; rep++)); do
             label="policy_${policy}_query_${query}_cross${cross}_zipf${zipf}_rw${rw}"
             [[ $REPEATS -gt 1 ]] && label="${label}_rep${rep}"
-            run_one "$query" "$rw" "$zipf" "$cross" "$policy" "$rep" "$label"
-            ((total++)) || true
+            run_one "$query" "$rw" "$zipf" "$cross" "$policy" "$rep" "$label" && ((total++)) || true
           done
         done
       done
