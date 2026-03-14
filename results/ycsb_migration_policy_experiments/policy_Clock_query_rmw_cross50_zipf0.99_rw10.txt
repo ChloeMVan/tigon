@@ -1,0 +1,596 @@
+# YCSB migration policy experiment
+# query_type=rmw rw_ratio=10 zipf_theta=0.99 cross_ratio=50
+# policy=Clock when_to_move_out=Reactive hw_cc_budget_mb=95
+# host_num=2 worker_num=3 keys=200000 repeat=1
+# time_to_run=30 time_to_warmup=10
+# timestamp=2026-03-13T06:35:00-06:00
+---
+killing previous experiments...
+deleting log files...
+initializing cxl memory...
+I0313 06:35:44.453796  5345 bench_ycsb.cpp:66] RW_RATIO = 10, ZIPF_THETA = 0.99, CROSS_RATIO = 50
+I0313 06:35:44.453892  5345 bench_ycsb.cpp:67] checkpoint 0 to 
+I0313 06:35:44.453899  5345 bench_ycsb.cpp:68] cross_part_num 2
+I0313 06:35:44.453905  5345 bench_ycsb.cpp:69] lotus_sp_parallel_exec_commit 0
+I0313 06:35:44.453912  5345 bench_ycsb.cpp:70] granules_per_partition 2000
+I0313 06:35:44.453918  5345 bench_ycsb.cpp:71] keysPerGranule 100
+I0313 06:35:48.186376  5345 Database.h:81] ycsb initialization finished in 3723 milliseconds.
+I0313 06:35:48.327507  5345 CXLMemory.h:57] cxlalloc initialized for thread 0 (global ID = 0) on host 0
+I0313 06:35:48.327559  5345 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0313 06:35:48.333959  5345 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0313 06:35:48.340282  5345 Coordinator.h:422] Coordinator 0 initializes CXL transport metadata (2 ringbuffers each with 8192 entries (each 2039 Bytes)
+I0313 06:35:48.340303  5345 Coordinator.h:444] created global CXL EBR metadata
+I0313 06:35:48.340430  5345 Coordinator.h:97] WAL Group Commiting off. Log to file /root/pasha_log_non_group_commit.txt using Blackhole Logger
+I0313 06:35:48.340446  5345 Coordinator.h:101] Coordinator initializes 3 workers.
+I0313 06:35:48.340569  5345 Database.h:227] YCSB initializes data migration metadata
+I0313 06:35:48.340579  5345 TwoPLPashaExecutor.h:52] total hardware budget = 100000000 per host = 49475712
+I0313 06:35:48.340839  5350 Coordinator.h:476] Listener 0 on coordinator 0 listening on 192.168.100.2:1234 tcp_no_delay 1 tcp_quick_ack 0
+I0313 06:35:48.341189  5345 Coordinator.h:522] Coordinator 0 failed to connect 1(192.168.100.3:1234)'s listener 0, retry in 5 seconds.
+I0313 06:35:48.341842  5350 Socket.h:69] Disabling nagle
+I0313 06:35:48.341854  5350 Coordinator.h:491] Listener accepted connection from coordinator 1
+I0313 06:35:48.341861  5350 Coordinator.h:494] Listener 0 on coordinator 0 exits.
+I0313 06:35:53.341684  5345 Socket.h:69] Disabling nagle
+I0313 06:35:53.341708  5345 Coordinator.h:531] Coordinator 0 connected to 1
+I0313 06:35:53.341747  5345 Coordinator.h:543] Coordinator 0 connected to all peers.
+I0313 06:35:53.341796  5345 Dispatcher.h:38] IncomingDispatcher 0 coord_id 0
+I0313 06:35:53.341835  5345 Dispatcher.h:210] OutgoingDispatcher 0 coord_id 0
+I0313 06:35:53.341892  5345 Coordinator.h:640] pinned thread to core 0
+I0313 06:35:53.341908  5345 Coordinator.h:216] Coordinator starts to run 4 workers.
+I0313 06:35:53.341946  5345 Coordinator.h:640] pinned thread to core 1
+I0313 06:35:53.341944  5351 Dispatcher.h:57] Incoming Dispatcher started, numCoordinators = 2, numWorkers = 3, group id = 0, coordinator = 0
+I0313 06:35:53.341972  5352 Executor.h:79] Executor 0 starts.
+I0313 06:35:53.341989  5345 Coordinator.h:640] pinned thread to core 2
+I0313 06:35:53.342010  5353 Executor.h:79] Executor 1 starts.
+I0313 06:35:53.342079  5353 CXLMemory.h:57] cxlalloc initialized for thread 2 (global ID = 2) on host 0
+I0313 06:35:53.342093  5353 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 0
+I0313 06:35:53.342121  5345 Coordinator.h:640] pinned thread to core 3
+I0313 06:35:53.342171  5352 CXLMemory.h:57] cxlalloc initialized for thread 1 (global ID = 1) on host 0
+I0313 06:35:53.342183  5352 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 1
+I0313 06:35:53.342146  5354 Executor.h:79] Executor 2 starts.
+I0313 06:35:53.342324  5354 CXLMemory.h:57] cxlalloc initialized for thread 3 (global ID = 3) on host 0
+I0313 06:35:53.342332  5355 Manager.h:228] Manager(worker id = 3) on the coordinator node started.
+I0313 06:35:53.342410  5354 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 2
+I0313 06:35:54.342296  5345 Coordinator.h:307] commit: 5286 abort: 14737 (0/14737/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 127040, avg network size: 24.0333, si_in_serializable: 0 0 %, local: 0 %, local_access: 84238, local_cxl_access: 22732 (26.9854%), remote_access: 35780, remote_access_with_req: 6023 (16.8334%), data_move_in: 6106, data_move_out: 0
+I0313 06:35:55.342530  5345 Coordinator.h:307] commit: 5543 abort: 14666 (0/14666/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 105192, avg network size: 18.9774, si_in_serializable: 0 0 %, local: 0 %, local_access: 87377, local_cxl_access: 27953 (31.9913%), remote_access: 37105, remote_access_with_req: 4756 (12.8177%), data_move_in: 4641, data_move_out: 0
+I0313 06:35:56.342717  5345 Coordinator.h:307] commit: 5465 abort: 15402 (0/15402/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 96552, avg network size: 17.6673, si_in_serializable: 0 0 %, local: 0 %, local_access: 86029, local_cxl_access: 28563 (33.2016%), remote_access: 38705, remote_access_with_req: 4249 (10.9779%), data_move_in: 4257, data_move_out: 0
+I0313 06:35:57.342936  5345 Coordinator.h:307] commit: 5615 abort: 14642 (0/14642/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 93120, avg network size: 16.5841, si_in_serializable: 0 0 %, local: 0 %, local_access: 88745, local_cxl_access: 30396 (34.2509%), remote_access: 37457, remote_access_with_req: 3977 (10.6175%), data_move_in: 3788, data_move_out: 0
+I0313 06:35:58.343156  5345 Coordinator.h:307] commit: 5570 abort: 15023 (0/15023/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 84384, avg network size: 15.1497, si_in_serializable: 0 0 %, local: 0 %, local_access: 89228, local_cxl_access: 31102 (34.8568%), remote_access: 37052, remote_access_with_req: 3572 (9.64051%), data_move_in: 3699, data_move_out: 0
+I0313 06:35:59.343374  5345 Coordinator.h:307] commit: 5615 abort: 15068 (0/15068/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 83320, avg network size: 14.8388, si_in_serializable: 0 0 %, local: 0 %, local_access: 87923, local_cxl_access: 31902 (36.284%), remote_access: 36578, remote_access_with_req: 3437 (9.39636%), data_move_in: 3501, data_move_out: 0
+I0313 06:36:00.343549  5345 Coordinator.h:307] commit: 5485 abort: 15500 (0/15500/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 75240, avg network size: 13.7174, si_in_serializable: 0 0 %, local: 0 %, local_access: 87469, local_cxl_access: 31625 (36.1557%), remote_access: 38422, remote_access_with_req: 3056 (7.95378%), data_move_in: 3269, data_move_out: 0
+I0313 06:36:01.343758  5345 Coordinator.h:307] commit: 5817 abort: 14878 (0/14878/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 78680, avg network size: 13.5259, si_in_serializable: 0 0 %, local: 0 %, local_access: 90625, local_cxl_access: 34049 (37.5713%), remote_access: 38074, remote_access_with_req: 3113 (8.17618%), data_move_in: 3015, data_move_out: 0
+I0313 06:36:02.343931  5345 Coordinator.h:307] commit: 5703 abort: 15125 (0/15125/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 76152, avg network size: 13.353, si_in_serializable: 0 0 %, local: 0 %, local_access: 90727, local_cxl_access: 33368 (36.7785%), remote_access: 37438, remote_access_with_req: 3003 (8.02126%), data_move_in: 2899, data_move_out: 0
+I0313 06:36:03.344151  5345 Coordinator.h:307] commit: 5779 abort: 15455 (0/15455/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 72576, avg network size: 12.5586, si_in_serializable: 0 0 %, local: 0 %, local_access: 89943, local_cxl_access: 34161 (37.9807%), remote_access: 39617, remote_access_with_req: 2861 (7.22165%), data_move_in: 2874, data_move_out: 0
+I0313 06:36:04.344365  5345 Coordinator.h:307] commit: 5813 abort: 16615 (0/16615/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 70848, avg network size: 12.1879, si_in_serializable: 0 0 %, local: 0 %, local_access: 94694, local_cxl_access: 35033 (36.996%), remote_access: 38646, remote_access_with_req: 2685 (6.94768%), data_move_in: 2723, data_move_out: 0
+I0313 06:36:05.344584  5345 Coordinator.h:307] commit: 5713 abort: 15081 (0/15081/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 66968, avg network size: 11.722, si_in_serializable: 0 0 %, local: 0 %, local_access: 90141, local_cxl_access: 34520 (38.2956%), remote_access: 36746, remote_access_with_req: 2552 (6.94497%), data_move_in: 2690, data_move_out: 0
+I0313 06:36:06.344794  5345 Coordinator.h:307] commit: 4389 abort: 16984 (0/16984/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 50368, avg network size: 11.476, si_in_serializable: 0 0 %, local: 0 %, local_access: 91510, local_cxl_access: 26987 (29.4908%), remote_access: 38092, remote_access_with_req: 1840 (4.83041%), data_move_in: 1921, data_move_out: 0
+I0313 06:36:07.344902  5345 Coordinator.h:307] commit: 0 abort: 22150 (0/22150/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94387, local_cxl_access: 0 (0%), remote_access: 35703, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:08.344990  5345 Coordinator.h:307] commit: 0 abort: 22154 (0/22154/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94394, local_cxl_access: 0 (0%), remote_access: 35718, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:09.345044  5345 Coordinator.h:307] commit: 0 abort: 22149 (0/22149/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94391, local_cxl_access: 0 (0%), remote_access: 35701, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:10.345106  5345 Coordinator.h:307] commit: 0 abort: 22146 (0/22146/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94370, local_cxl_access: 0 (0%), remote_access: 35694, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:11.345194  5345 Coordinator.h:307] commit: 0 abort: 22151 (0/22151/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94396, local_cxl_access: 0 (0%), remote_access: 35708, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:12.345279  5345 Coordinator.h:307] commit: 0 abort: 22153 (0/22153/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94391, local_cxl_access: 0 (0%), remote_access: 35714, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:13.345364  5345 Coordinator.h:307] commit: 0 abort: 22151 (0/22151/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94387, local_cxl_access: 0 (0%), remote_access: 35708, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:14.345407  5345 Coordinator.h:307] commit: 0 abort: 22145 (0/22145/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94368, local_cxl_access: 0 (0%), remote_access: 35693, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:15.345494  5345 Coordinator.h:307] commit: 0 abort: 22145 (0/22145/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94373, local_cxl_access: 0 (0%), remote_access: 35698, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:16.345533  5345 Coordinator.h:307] commit: 0 abort: 22154 (0/22154/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94398, local_cxl_access: 0 (0%), remote_access: 35720, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:17.345629  5345 Coordinator.h:307] commit: 0 abort: 22151 (0/22151/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94389, local_cxl_access: 0 (0%), remote_access: 35702, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:18.345708  5345 Coordinator.h:307] commit: 0 abort: 22153 (0/22153/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94399, local_cxl_access: 0 (0%), remote_access: 35713, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:19.345799  5345 Coordinator.h:307] commit: 0 abort: 22152 (0/22152/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94381, local_cxl_access: 0 (0%), remote_access: 35712, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:20.345885  5345 Coordinator.h:307] commit: 0 abort: 22151 (0/22151/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94394, local_cxl_access: 0 (0%), remote_access: 35705, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:21.345966  5345 Coordinator.h:307] commit: 0 abort: 22142 (0/22142/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94370, local_cxl_access: 0 (0%), remote_access: 35682, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:22.346050  5345 Coordinator.h:307] commit: 0 abort: 22150 (0/22150/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94391, local_cxl_access: 0 (0%), remote_access: 35701, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:23.346096  5345 Coordinator.h:307] commit: 0 abort: 22147 (0/22147/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 0, avg network size: -nan, si_in_serializable: 0 -nan %, local: -nan %, local_access: 94374, local_cxl_access: 0 (0%), remote_access: 35700, remote_access_with_req: 0 (0%), data_move_in: 0, data_move_out: 0
+I0313 06:36:23.346120  5345 Coordinator.h:345] average commit: 795.75 abort: 21261.2 (0/21261.2/0), abort_rate: 0.963923, network size: 188184, avg network size: 11.8243, si_in_serializable: 0 0 %, local: 0 %, local_access: 1880898, local_cxl_access: 96540 (5.13265%), remote_access: 720456, remote_access_with_req: 7077 (0.982295%), data_move_in: 7334, data_move_out: 0
+I0313 06:36:23.346143  5345 Executor.h:243] Worker 0 latency: 309 us (50%) 502 us (75%) 1733 us (95%) 3986 us (99%). dist txn latency: 354 us (50%) 590 us (75%) 2265 us (95%) 4305 us (99%)  avg 612 us . local txn latency: 223 us (50%) 446 us (75%) 1176 us (95%) 2081 us (99%)  avg 397 us. txn commit latency: 318 us (50%) 614 us (75%) 1791 us (95%) 3140 us (99%) avg 559 us.
+ LOCAL txn stall 0 us,  local_work 170 us,  remote_work 0 us,  commit_work 33 us,  commit_prepare 20 us,  commit_persistence 0 us,  commit_write_back 3 us,  commit_replication 0 us,  commit_release_lock 6 us 
+ DIST txn stall 0 us,  local_work 174 us,  remote_work 66 us,  commit_work 36 us,  commit_prepare 20 us,  commit_persistence 0 us,  commit_write_back 3 us,  commit_replication 0 us,  commit_release_lock 6 us 
+I0313 06:36:23.346218  5354 Executor.h:217] [progress] Executor 2 entering CLEANUP wait.
+I0313 06:36:23.346223  5345 Executor.h:273] message stats, type: 0 count: 0 total size: 0
+I0313 06:36:23.346235  5345 Executor.h:273] message stats, type: 1 count: 0 total size: 0
+I0313 06:36:23.346241  5345 Executor.h:273] message stats, type: 2 count: 0 total size: 0
+I0313 06:36:23.346247  5345 Executor.h:273] message stats, type: 3 count: 0 total size: 0
+I0313 06:36:23.346254  5345 Executor.h:273] message stats, type: 4 count: 15228 total size: 365472
+I0313 06:36:23.346261  5345 Executor.h:273] message stats, type: 5 count: 14954 total size: 194402
+I0313 06:36:23.346267  5345 Executor.h:273] message stats, type: 6 count: 0 total size: 0
+I0313 06:36:23.346273  5345 Executor.h:273] message stats, type: 7 count: 0 total size: 0
+I0313 06:36:23.346279  5345 Executor.h:273] message stats, type: 8 count: 52243 total size: 417944
+I0313 06:36:23.346288  5345 Executor.h:273] message stats, type: 9 count: 0 total size: 0
+I0313 06:36:23.346294  5345 Executor.h:273] message stats, type: 10 count: 0 total size: 0
+I0313 06:36:23.346302  5345 Executor.h:273] message stats, type: 11 count: 0 total size: 0
+I0313 06:36:23.346307  5345 Executor.h:275] [progress] Executor 0: message stats done, entering save_cdf (path empty=1).
+I0313 06:36:23.346314  5345 Executor.h:277] [progress] Executor 0: save_cdf done, entering correctness_test.
+I0313 06:36:23.346319  5345 Executor.h:280] [progress] Executor 0: correctness_test done, onExit complete.
+I0313 06:36:23.346334  5352 Executor.h:217] [progress] Executor 0 entering CLEANUP wait.
+I0313 06:36:23.346372  5353 Executor.h:217] [progress] Executor 1 entering CLEANUP wait.
+I0313 06:36:33.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:36:33.346342  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:36:33.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:36:43.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:36:43.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:36:43.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:36:53.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:36:53.346342  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:36:53.346418  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:37:03.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:37:03.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:37:03.346418  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:37:13.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:37:13.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:37:13.346418  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:37:23.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:37:23.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:37:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:37:33.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:37:33.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:37:33.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:37:43.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:37:43.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:37:43.346418  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:37:53.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:37:53.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:37:53.346418  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:38:03.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:38:03.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:38:03.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:38:13.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:38:13.346344  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:38:13.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:38:23.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:38:23.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:38:23.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:38:33.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:38:33.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:38:33.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:38:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:38:43.346344  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:38:43.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:38:53.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:38:53.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:38:53.346418  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:39:03.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:39:03.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:39:03.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:39:13.346235  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:39:13.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:39:13.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:39:23.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:39:23.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:39:23.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:39:33.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:39:33.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:39:33.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:39:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:39:43.346344  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:39:43.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:39:53.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:39:53.346343  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:39:53.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:40:03.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:40:03.346346  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:40:03.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:40:13.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:40:13.346347  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:40:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:40:23.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:40:23.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:40:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:40:33.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:40:33.346346  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:40:33.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:40:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:40:43.346347  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:40:43.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:40:53.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:40:53.346346  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:40:53.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:41:03.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:41:03.346346  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:41:03.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:41:13.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:41:13.346346  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:41:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:41:23.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:41:23.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:41:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:41:33.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:41:33.346346  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:41:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:41:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:41:43.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:41:43.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:41:53.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:41:53.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:41:53.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:42:03.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:42:03.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:42:03.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:42:13.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:42:13.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:42:13.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:42:23.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:42:23.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:42:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:42:33.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:42:33.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:42:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:42:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:42:43.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:42:43.346419  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:42:53.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:42:53.346352  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:42:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:43:03.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:43:03.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:43:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:43:13.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:43:13.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:43:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:43:23.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:43:23.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:43:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:43:33.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:43:33.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:43:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:43:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:43:43.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:43:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:43:53.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:43:53.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:43:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:44:03.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:44:03.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:44:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:44:13.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:44:13.346349  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:44:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:44:23.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:44:23.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:44:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:44:33.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:44:33.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:44:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:44:43.346236  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:44:43.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:44:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:44:53.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:44:53.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:44:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:45:03.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:45:03.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:45:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:45:13.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:45:13.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:45:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:45:23.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:45:23.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:45:23.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:45:33.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:45:33.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:45:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:45:43.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:45:43.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:45:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:45:53.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:45:53.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:45:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:46:03.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:46:03.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:46:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:46:13.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:46:13.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:46:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:46:23.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:46:23.346355  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:46:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:46:33.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:46:33.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:46:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:46:43.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:46:43.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:46:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:46:53.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:46:53.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:46:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:47:03.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:47:03.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:47:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:47:13.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:47:13.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:47:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:47:23.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:47:23.346350  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:47:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:47:33.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:47:33.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:47:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:47:43.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:47:43.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:47:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:47:53.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:47:53.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:47:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:48:03.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:48:03.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:48:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:48:13.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:48:13.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:48:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:48:23.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:48:23.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:48:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:48:33.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:48:33.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:48:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:48:43.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:48:43.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:48:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:48:53.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:48:53.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:48:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:49:03.346237  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:49:03.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:49:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:49:13.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:49:13.346351  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:49:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:49:23.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:49:23.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:49:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:49:33.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:49:33.346352  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:49:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:49:43.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:49:43.346352  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:49:43.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:49:53.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:49:53.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:49:53.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:50:03.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:50:03.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:50:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:50:13.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:50:13.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:50:13.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:50:23.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:50:23.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:50:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:50:33.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:50:33.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:50:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:50:43.346243  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:50:43.346356  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:50:43.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:50:53.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:50:53.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:50:53.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:51:03.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:51:03.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:51:03.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:51:13.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:51:13.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:51:13.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:51:23.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:51:23.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:51:23.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:51:33.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:51:33.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:51:33.346421  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:51:43.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:51:43.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:51:43.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:51:53.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:51:53.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:51:53.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:52:03.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:52:03.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:52:03.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:52:13.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:52:13.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:52:13.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:52:23.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:52:23.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:52:23.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:52:33.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:52:33.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:52:33.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:52:43.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:52:43.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:52:43.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:52:53.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:52:53.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:52:53.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:53:03.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:53:03.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:53:03.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:53:13.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:53:13.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:53:13.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:53:23.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:53:23.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:53:23.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:53:33.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:53:33.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:53:33.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:53:43.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:53:43.346356  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:53:43.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:53:53.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:53:53.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:53:53.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:54:03.346238  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:54:03.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:54:03.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:54:13.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:54:13.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:54:13.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:54:23.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:54:23.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:54:23.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:54:33.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:54:33.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:54:33.346422  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:54:43.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:54:43.346357  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:54:43.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:54:53.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:54:53.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:54:53.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:55:03.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:55:03.346354  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:55:03.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:55:13.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:55:13.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:55:13.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:55:23.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:55:23.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:55:23.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:55:33.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:55:33.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:55:33.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:55:43.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:55:43.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:55:43.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:55:53.346242  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:55:53.346360  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:55:53.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:56:03.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:56:03.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:56:03.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:56:13.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:56:13.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:56:13.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:56:23.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:56:23.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:56:23.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:56:33.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:56:33.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:56:33.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:56:43.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:56:43.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:56:43.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:56:53.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:56:53.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:56:53.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:57:03.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:57:03.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:57:03.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:57:13.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:57:13.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:57:13.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:57:23.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:57:23.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:57:23.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:57:33.346239  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:57:33.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:57:33.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:57:43.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:57:43.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:57:43.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:57:53.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:57:53.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:57:53.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:58:03.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:58:03.346359  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:58:03.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:58:13.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:58:13.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:58:13.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:58:23.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:58:23.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:58:23.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:58:33.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:58:33.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:58:33.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:58:43.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:58:43.346360  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:58:43.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:58:53.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:58:53.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:58:53.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:59:03.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:59:03.346364  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:59:03.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:59:13.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:59:13.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:59:13.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:59:23.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:59:23.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:59:23.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:59:33.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:59:33.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:59:33.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:59:43.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:59:43.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:59:43.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 06:59:53.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 06:59:53.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 06:59:53.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:00:03.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:00:03.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:00:03.346423  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:00:13.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:00:13.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:00:13.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:00:23.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:00:23.346364  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:00:23.346426  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:00:33.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:00:33.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:00:33.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:00:43.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:00:43.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:00:43.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:00:53.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:00:53.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:00:53.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:01:03.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:01:03.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:01:03.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:01:13.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:01:13.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:01:13.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:01:23.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:01:23.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:01:23.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:01:33.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:01:33.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:01:33.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:01:43.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:01:43.346361  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:01:43.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:01:53.346240  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:01:53.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:01:53.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:02:03.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:02:03.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:02:03.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:02:13.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:02:13.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:02:13.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:02:23.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:02:23.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:02:23.346426  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:02:33.346242  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:02:33.346365  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:02:33.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:02:43.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:02:43.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:02:43.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:02:53.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:02:53.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:02:53.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:03:03.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:03:03.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:03:03.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:03:13.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:03:13.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:03:13.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:03:23.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:03:23.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:03:23.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:03:33.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:03:33.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:03:33.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).
+I0313 07:03:43.346241  5354 Executor.h:223] [progress] Executor 2 still in CLEANUP wait (heartbeat).
+I0313 07:03:43.346362  5352 Executor.h:223] [progress] Executor 0 still in CLEANUP wait (heartbeat).
+I0313 07:03:43.346424  5353 Executor.h:223] [progress] Executor 1 still in CLEANUP wait (heartbeat).

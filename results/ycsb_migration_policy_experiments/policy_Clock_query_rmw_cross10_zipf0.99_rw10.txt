@@ -1,0 +1,69 @@
+# YCSB migration policy experiment
+# query_type=rmw rw_ratio=10 zipf_theta=0.99 cross_ratio=10
+# policy=Clock when_to_move_out=Reactive hw_cc_budget_mb=95
+# host_num=2 worker_num=3 keys=200000 repeat=1
+# time_to_run=30 time_to_warmup=10
+# timestamp=2026-03-13T06:31:09-06:00
+---
+killing previous experiments...
+deleting log files...
+initializing cxl memory...
+I0313 06:31:53.301607  4832 bench_ycsb.cpp:66] RW_RATIO = 10, ZIPF_THETA = 0.99, CROSS_RATIO = 10
+I0313 06:31:53.301703  4832 bench_ycsb.cpp:67] checkpoint 0 to 
+I0313 06:31:53.301710  4832 bench_ycsb.cpp:68] cross_part_num 2
+I0313 06:31:53.301716  4832 bench_ycsb.cpp:69] lotus_sp_parallel_exec_commit 0
+I0313 06:31:53.301723  4832 bench_ycsb.cpp:70] granules_per_partition 2000
+I0313 06:31:53.301730  4832 bench_ycsb.cpp:71] keysPerGranule 100
+I0313 06:31:56.982577  4832 Database.h:81] ycsb initialization finished in 3671 milliseconds.
+I0313 06:31:57.124138  4832 CXLMemory.h:57] cxlalloc initialized for thread 0 (global ID = 0) on host 0
+I0313 06:31:57.124173  4832 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0313 06:31:57.130599  4832 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0313 06:31:57.137014  4832 Coordinator.h:422] Coordinator 0 initializes CXL transport metadata (2 ringbuffers each with 8192 entries (each 2039 Bytes)
+I0313 06:31:57.137034  4832 Coordinator.h:444] created global CXL EBR metadata
+I0313 06:31:57.137162  4832 Coordinator.h:97] WAL Group Commiting off. Log to file /root/pasha_log_non_group_commit.txt using Blackhole Logger
+I0313 06:31:57.137180  4832 Coordinator.h:101] Coordinator initializes 3 workers.
+I0313 06:31:57.137307  4832 Database.h:227] YCSB initializes data migration metadata
+I0313 06:31:57.137320  4832 TwoPLPashaExecutor.h:52] total hardware budget = 100000000 per host = 49475712
+I0313 06:31:57.137754  4837 Coordinator.h:476] Listener 0 on coordinator 0 listening on 192.168.100.2:1234 tcp_no_delay 1 tcp_quick_ack 0
+I0313 06:31:57.137861  4832 Coordinator.h:522] Coordinator 0 failed to connect 1(192.168.100.3:1234)'s listener 0, retry in 5 seconds.
+I0313 06:31:57.138630  4837 Socket.h:69] Disabling nagle
+I0313 06:31:57.138643  4837 Coordinator.h:491] Listener accepted connection from coordinator 1
+I0313 06:31:57.138649  4837 Coordinator.h:494] Listener 0 on coordinator 0 exits.
+I0313 06:32:02.138245  4832 Socket.h:69] Disabling nagle
+I0313 06:32:02.138265  4832 Coordinator.h:531] Coordinator 0 connected to 1
+I0313 06:32:02.138306  4832 Coordinator.h:543] Coordinator 0 connected to all peers.
+I0313 06:32:02.138331  4832 Dispatcher.h:38] IncomingDispatcher 0 coord_id 0
+I0313 06:32:02.138373  4832 Dispatcher.h:210] OutgoingDispatcher 0 coord_id 0
+I0313 06:32:02.138441  4832 Coordinator.h:640] pinned thread to core 0
+I0313 06:32:02.138482  4832 Coordinator.h:216] Coordinator starts to run 4 workers.
+I0313 06:32:02.138463  4838 Dispatcher.h:57] Incoming Dispatcher started, numCoordinators = 2, numWorkers = 3, group id = 0, coordinator = 0
+I0313 06:32:02.138549  4832 Coordinator.h:640] pinned thread to core 1
+I0313 06:32:02.138557  4839 Executor.h:79] Executor 0 starts.
+I0313 06:32:02.138609  4839 CXLMemory.h:57] cxlalloc initialized for thread 1 (global ID = 1) on host 0
+I0313 06:32:02.138622  4839 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 0
+I0313 06:32:02.138649  4840 Executor.h:79] Executor 1 starts.
+I0313 06:32:02.138646  4832 Coordinator.h:640] pinned thread to core 2
+I0313 06:32:02.138774  4840 CXLMemory.h:57] cxlalloc initialized for thread 2 (global ID = 2) on host 0
+I0313 06:32:02.138784  4840 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 1
+I0313 06:32:02.138795  4832 Coordinator.h:640] pinned thread to core 3
+I0313 06:32:02.138906  4841 Executor.h:79] Executor 2 starts.
+I0313 06:32:02.138908  4842 Manager.h:228] Manager(worker id = 3) on the coordinator node started.
+I0313 06:32:02.139075  4841 CXLMemory.h:57] cxlalloc initialized for thread 3 (global ID = 3) on host 0
+I0313 06:32:02.139087  4841 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 2
+I0313 06:32:03.138965  4832 Coordinator.h:307] commit: 7090 abort: 14836 (0/14836/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 36512, avg network size: 5.14979, si_in_serializable: 0 0 %, local: 0 %, local_access: 131397, local_cxl_access: 28566 (21.7402%), remote_access: 10587, remote_access_with_req: 1855 (17.5215%), data_move_in: 1856, data_move_out: 0
+I0313 06:32:04.139078  4832 Coordinator.h:307] commit: 6931 abort: 14463 (0/14463/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 32168, avg network size: 4.64118, si_in_serializable: 0 0 %, local: 0 %, local_access: 128375, local_cxl_access: 35233 (27.4454%), remote_access: 10928, remote_access_with_req: 1598 (14.623%), data_move_in: 1658, data_move_out: 0
+F0313 06:32:04.223407  4840 MPSCRingBuffer.h:71] Check failed: data_size <= entry_data_size 
+*** Check failure stack trace: ***
+    @     0x7f97a8b8fb03  google::LogMessage::Fail()
+    @     0x7f97a8b979d1  google::LogMessage::SendToLog()
+    @     0x7f97a8b8f7c2  google::LogMessage::Flush()
+    @     0x7f97a8b9178f  google::LogMessageFatal::~LogMessageFatal()
+    @           0x42a78f  star::Executor<>::flush_messages()
+    @           0x4316d9  star::TwoPLPashaTransaction::process_requests()
+    @           0x435641  star::ycsb::ReadModifyWrite<>::execute()
+    @           0x4280bf  star::Executor<>::start()
+    @     0x7f97a84dc253  (unknown)
+    @     0x7f97a8094ac3  (unknown)
+    @     0x7f97a81268d0  (unknown)
+    @              (nil)  (unknown)
+killing previous experiments...
