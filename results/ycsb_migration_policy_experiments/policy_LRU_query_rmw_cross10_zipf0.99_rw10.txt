@@ -1,0 +1,73 @@
+# YCSB migration policy experiment
+# query_type=rmw rw_ratio=10 zipf_theta=0.99 cross_ratio=10
+# policy=LRU when_to_move_out=Reactive hw_cc_budget_mb=95
+# host_num=2 worker_num=3 keys=200000 repeat=1
+# time_to_run=30 time_to_warmup=10
+# timestamp=2026-03-14T17:24:59-06:00
+---
+killing previous experiments...
+deleting log files...
+initializing cxl memory...
+I0314 17:25:43.733268  1150 bench_ycsb.cpp:66] RW_RATIO = 10, ZIPF_THETA = 0.99, CROSS_RATIO = 10
+I0314 17:25:43.733358  1150 bench_ycsb.cpp:67] checkpoint 0 to 
+I0314 17:25:43.733366  1150 bench_ycsb.cpp:68] cross_part_num 2
+I0314 17:25:43.733371  1150 bench_ycsb.cpp:69] lotus_sp_parallel_exec_commit 0
+I0314 17:25:43.733378  1150 bench_ycsb.cpp:70] granules_per_partition 2000
+I0314 17:25:43.733385  1150 bench_ycsb.cpp:71] keysPerGranule 100
+I0314 17:25:47.466696  1150 Database.h:81] ycsb initialization finished in 3724 milliseconds.
+I0314 17:25:47.607893  1150 CXLMemory.h:57] cxlalloc initialized for thread 0 (global ID = 0) on host 0
+I0314 17:25:47.607929  1150 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0314 17:25:47.614287  1150 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0314 17:25:47.620595  1150 Coordinator.h:422] Coordinator 0 initializes CXL transport metadata (2 ringbuffers each with 8192 entries (each 2039 Bytes)
+I0314 17:25:47.620615  1150 Coordinator.h:444] created global CXL EBR metadata
+I0314 17:25:47.620738  1150 Coordinator.h:97] WAL Group Commiting off. Log to file /root/pasha_log_non_group_commit.txt using Blackhole Logger
+I0314 17:25:47.620748  1150 Coordinator.h:101] Coordinator initializes 3 workers.
+I0314 17:25:47.620867  1150 Database.h:227] YCSB initializes data migration metadata
+I0314 17:25:47.620877  1150 TwoPLPashaExecutor.h:52] total hardware budget = 100000000 per host = 49475712
+I0314 17:25:47.621177  1155 Coordinator.h:476] Listener 0 on coordinator 0 listening on 192.168.100.2:1234 tcp_no_delay 1 tcp_quick_ack 0
+I0314 17:25:47.621412  1150 Coordinator.h:522] Coordinator 0 failed to connect 1(192.168.100.3:1234)'s listener 0, retry in 5 seconds.
+I0314 17:25:47.622148  1155 Socket.h:69] Disabling nagle
+I0314 17:25:47.622159  1155 Coordinator.h:491] Listener accepted connection from coordinator 1
+I0314 17:25:47.622165  1155 Coordinator.h:494] Listener 0 on coordinator 0 exits.
+I0314 17:25:52.621932  1150 Socket.h:69] Disabling nagle
+I0314 17:25:52.621954  1150 Coordinator.h:531] Coordinator 0 connected to 1
+I0314 17:25:52.621994  1150 Coordinator.h:543] Coordinator 0 connected to all peers.
+I0314 17:25:52.622025  1150 Dispatcher.h:38] IncomingDispatcher 0 coord_id 0
+I0314 17:25:52.622066  1150 Dispatcher.h:210] OutgoingDispatcher 0 coord_id 0
+I0314 17:25:52.622121  1150 Coordinator.h:640] pinned thread to core 0
+I0314 17:25:52.622138  1150 Coordinator.h:216] Coordinator starts to run 4 workers.
+I0314 17:25:52.622146  1156 Dispatcher.h:57] Incoming Dispatcher started, numCoordinators = 2, numWorkers = 3, group id = 0, coordinator = 0
+I0314 17:25:52.622176  1150 Coordinator.h:640] pinned thread to core 1
+I0314 17:25:52.622201  1157 Executor.h:79] Executor 0 starts.
+I0314 17:25:52.622220  1150 Coordinator.h:640] pinned thread to core 2
+I0314 17:25:52.622285  1157 CXLMemory.h:57] cxlalloc initialized for thread 1 (global ID = 1) on host 0
+I0314 17:25:52.622244  1158 Executor.h:79] Executor 1 starts.
+I0314 17:25:52.622310  1157 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 0
+I0314 17:25:52.622408  1150 Coordinator.h:640] pinned thread to core 3
+I0314 17:25:52.622419  1159 Executor.h:79] Executor 2 starts.
+I0314 17:25:52.622453  1158 CXLMemory.h:57] cxlalloc initialized for thread 2 (global ID = 2) on host 0
+I0314 17:25:52.622506  1158 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 1
+I0314 17:25:52.622658  1160 Manager.h:228] Manager(worker id = 3) on the coordinator node started.
+I0314 17:25:52.622702  1159 CXLMemory.h:57] cxlalloc initialized for thread 3 (global ID = 3) on host 0
+I0314 17:25:52.622715  1159 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 2
+I0314 17:25:53.622720  1150 Coordinator.h:307] commit: 7009 abort: 14313 (0/14313/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 38512, avg network size: 5.49465, si_in_serializable: 0 0 %, local: 0 %, local_access: 127590, local_cxl_access: 28832 (22.5974%), remote_access: 10511, remote_access_with_req: 1956 (18.6091%), data_move_in: 2011, data_move_out: 0
+I0314 17:25:54.622975  1150 Coordinator.h:307] commit: 6998 abort: 14192 (0/14192/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 31880, avg network size: 4.55559, si_in_serializable: 0 0 %, local: 0 %, local_access: 126044, local_cxl_access: 35536 (28.1933%), remote_access: 11000, remote_access_with_req: 1571 (14.2818%), data_move_in: 1596, data_move_out: 0
+I0314 17:25:55.623170  1150 Coordinator.h:307] commit: 7041 abort: 14456 (0/14456/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 29456, avg network size: 4.1835, si_in_serializable: 0 0 %, local: 0 %, local_access: 128416, local_cxl_access: 38165 (29.7198%), remote_access: 11140, remote_access_with_req: 1404 (12.6032%), data_move_in: 1447, data_move_out: 0
+I0314 17:25:56.623332  1150 Coordinator.h:307] commit: 7069 abort: 14119 (0/14119/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 29520, avg network size: 4.17598, si_in_serializable: 0 0 %, local: 0 %, local_access: 128410, local_cxl_access: 39797 (30.9921%), remote_access: 11310, remote_access_with_req: 1350 (11.9363%), data_move_in: 1470, data_move_out: 0
+I0314 17:25:57.623492  1150 Coordinator.h:307] commit: 6995 abort: 14540 (0/14540/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 27160, avg network size: 3.88277, si_in_serializable: 0 0 %, local: 0 %, local_access: 128149, local_cxl_access: 40462 (31.5742%), remote_access: 10611, remote_access_with_req: 1281 (12.0724%), data_move_in: 1242, data_move_out: 0
+I0314 17:25:58.623641  1150 Coordinator.h:307] commit: 7133 abort: 14327 (0/14327/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 30280, avg network size: 4.24506, si_in_serializable: 0 0 %, local: 0 %, local_access: 127182, local_cxl_access: 41914 (32.9559%), remote_access: 11769, remote_access_with_req: 1377 (11.7002%), data_move_in: 1238, data_move_out: 0
+I0314 17:25:59.623806  1150 Coordinator.h:307] commit: 7050 abort: 15306 (0/15306/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 27032, avg network size: 3.83433, si_in_serializable: 0 0 %, local: 0 %, local_access: 131440, local_cxl_access: 42280 (32.1668%), remote_access: 11491, remote_access_with_req: 1252 (10.8955%), data_move_in: 1211, data_move_out: 0
+F0314 17:26:00.150007  1157 MPSCRingBuffer.h:71] Check failed: data_size <= entry_data_size 
+*** Check failure stack trace: ***
+    @     0x7f355fddab03  google::LogMessage::Fail()
+    @     0x7f355fde29d1  google::LogMessage::SendToLog()
+    @     0x7f355fdda7c2  google::LogMessage::Flush()
+    @     0x7f355fddc78f  google::LogMessageFatal::~LogMessageFatal()
+    @           0x42a78f  star::Executor<>::flush_messages()
+    @           0x42e2de  star::TwoPLPasha<>::commit()
+    @           0x428183  star::Executor<>::start()
+    @     0x7f355fadc253  (unknown)
+    @     0x7f355f694ac3  (unknown)
+    @     0x7f355f7268d0  (unknown)
+    @              (nil)  (unknown)
+killing previous experiments...
