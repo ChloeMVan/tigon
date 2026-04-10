@@ -18,7 +18,7 @@ namespace star
 class PolicyAging : public MigrationManager {
     public:
         struct AgingMeta {
-                uint8_t second_chance = 0;
+                uint8_t age_counter = 0xFF;
         };
 
         struct AgingTrackerNode {
@@ -101,27 +101,41 @@ class PolicyAging : public MigrationManager {
                         node->next = nullptr;
                 }
 
-                // head is the victim
-                AgingTrackerNode *move_forward_and_get_cursor()
+                // changes
+                // Single pass: right-shift every age counter by 1. Call once per eviction round.
+                void age_all_entries()
                 {
-                        if (cursor == nullptr) {
-                                cursor = head;
-                        } else {
-                                cursor = cursor->next;
+                        AgingTrackerNode *cur = head;
+                        while (cur != nullptr) {
+                                AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(cur->row_entity.migration_manager_meta);
+                                aging_meta->age_counter >>= 1;
+                                cur = cur->next;
                         }
-
-                        return cursor;
                 }
 
-                void reset_cursor()
+                // Single pass: return the node with the minimum age_counter (eviction candidate).
+                AgingTrackerNode *get_min_age_victim()
                 {
-                        cursor = nullptr;
+                        AgingTrackerNode *victim = nullptr;
+                        uint8_t min_age = std::numeric_limits<uint8_t>::max();
+
+                        AgingTrackerNode *cur = head;
+                        while (cur != nullptr) {
+                                AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(cur->row_entity.migration_manager_meta);
+                                if (aging_meta->age_counter < min_age) {
+                                        min_age = aging_meta->age_counter;
+                                        victim = cur;
+                                }
+                                cur = cur->next;
+                        }
+                        return victim;
                 }
+
+                bool is_empty() const { return head == nullptr; }
 
             private:
                 AgingTrackerNode *head{ nullptr };
                 AgingTrackerNode *tail{ nullptr };
-                AgingTrackerNode *cursor{ nullptr };
 
                 pthread_spinlock_t aging_tracker_lock;
         };
@@ -136,6 +150,8 @@ class PolicyAging : public MigrationManager {
         : MigrationManager(move_from_partition_to_shared_region, move_from_shared_region_to_partition, delete_and_update_next_key_info, when_to_move_out_str)
         , hw_cc_budget(hw_cc_budget)
         {
+                // changes
+                CHECK(MigrationManager::migration_policy_meta_size >= sizeof(AgingMeta));
                 aging_trackers = new AgingTracker[partition_num];
                 for (int i = 0; i < partition_num; i++) {
                         new(&aging_trackers[i]) AgingTracker();
@@ -151,7 +167,7 @@ class PolicyAging : public MigrationManager {
         void access_row(void *migration_policy_meta, uint64_t partition_id) override
         {
                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
-                aging_meta->second_chance = 1;
+                aging_meta->age_counter |= 0x80;   // changes
         }
 
         migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt) override
@@ -179,57 +195,52 @@ class PolicyAging : public MigrationManager {
 
                 aging_tracker.lock();
                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
-                        aging_tracker.unlock();
-                        return ret;
+                    aging_tracker.unlock();
+                    return ret;
                 }
 
                 while (true) {
-                        AgingTrackerNode *victim = aging_tracker.move_forward_and_get_cursor();
-                        if (victim == nullptr) {
+                    if (aging_tracker.is_empty()) break;
+                    AgingTrackerNode *victim = aging_tracker.get_min_age_victim();
+                    if (victim == nullptr) {
+                        break;
+                    } else {
+                        migrated_row_entity victim_row_entity = victim->row_entity;
+                        bool move_out_success = false;
+                        move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
+                        if (move_out_success == true) {
+                            aging_tracker.untrack(victim);
+                            delete victim;
+                            // aging_tracker.reset_cursor();
+                            if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
+                                ret = true;
                                 break;
-                        } else {
-                                migrated_row_entity victim_row_entity = victim->row_entity;
-                                AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(victim_row_entity.migration_manager_meta);
-                                if (aging_meta->second_chance == 1) {
-                                        aging_meta->second_chance = 0;
-                                        continue;
-                                }
-                                bool move_out_success = false;
-                                move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
-                                if (move_out_success == true) {
-                                        aging_tracker.move_forward_and_get_cursor();
-                                        aging_tracker.untrack(victim);
-                                        // aging_tracker.reset_cursor();
-                                        if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
-                                                ret = true;
-                                                break;
-                                        }
-                                }
+                            }
                         }
+                    }
                 }
                 // aging_tracker.reset_cur_victim();
                 aging_tracker.unlock();
-
                 return ret;
         }
 
         bool delete_specific_row_and_move_out(ITable *table, const void *key, bool is_delete_local) override
         {
-                // key is unused
-                AgingTracker &aging_tracker = aging_trackers[table->partitionID()];
-                void *migration_policy_meta = nullptr;
-                bool need_move_out = false, ret = false;
+            // key is unused
+            AgingTracker &aging_tracker = aging_trackers[table->partitionID()];
+            void *migration_policy_meta = nullptr;
+            bool need_move_out = false, ret = false;
 
-                aging_tracker.lock();
+            aging_tracker.lock();
 
-                // delete and update next key information
-                ret = delete_and_update_next_key_info(table, key, is_delete_local, need_move_out, migration_policy_meta);
-                CHECK(ret == true);
-                CHECK(need_move_out == false);
+            // delete and update next key information
+            ret = delete_and_update_next_key_info(table, key, is_delete_local, need_move_out, migration_policy_meta);
+            CHECK(ret == true);
+            CHECK(need_move_out == false);
 
-                aging_tracker.unlock();
+            aging_tracker.unlock();
 
-                return ret;
+            return ret;
         }
 
     private:
