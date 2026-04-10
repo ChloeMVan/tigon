@@ -15,43 +15,43 @@
 namespace star
 {
 
-class PolicyClock : public MigrationManager {
+class PolicyAging : public MigrationManager {
     public:
-        struct ClockMeta {
+        struct AgingMeta {
                 uint8_t second_chance = 0;
         };
 
-        struct ClockTrackerNode {
-                ClockTrackerNode(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row)
+        struct AgingTrackerNode {
+                AgingTrackerNode(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row)
                         : row_entity(table, key, row, 0)
                 {}
 
                 migrated_row_entity row_entity;
-                ClockTrackerNode *next{ nullptr };
-                ClockTrackerNode *prev{ nullptr };
+                AgingTrackerNode *next{ nullptr };
+                AgingTrackerNode *prev{ nullptr };
         };
 
-        class ClockTracker {
+        class AgingTracker {
             public:
-                ClockTracker()
+                AgingTracker()
                 : head{nullptr}
                 {
                         // this spinlock will be shared between multiple processes
-                        pthread_spin_init(&clock_tracker_lock, PTHREAD_PROCESS_SHARED);
+                        pthread_spin_init(&aging_tracker_lock, PTHREAD_PROCESS_SHARED);
                 }
 
                 void lock()
                 {
-                        pthread_spin_lock(&clock_tracker_lock);
+                        pthread_spin_lock(&aging_tracker_lock);
                 }
 
                 void unlock()
                 {
-                        pthread_spin_unlock(&clock_tracker_lock);
+                        pthread_spin_unlock(&aging_tracker_lock);
                 }
 
                 // push back to the tail
-                void track(ClockTrackerNode *node)
+                void track(AgingTrackerNode *node)
                 {
                         if (head == nullptr && tail == nullptr) {
                                 head = node;
@@ -71,7 +71,7 @@ class PolicyClock : public MigrationManager {
                 }
 
                 // remove from the list
-                void untrack(ClockTrackerNode *node)
+                void untrack(AgingTrackerNode *node)
                 {
                         if (head == nullptr && tail == nullptr) {
                                 CHECK(0);
@@ -102,7 +102,7 @@ class PolicyClock : public MigrationManager {
                 }
 
                 // head is the victim
-                ClockTrackerNode *move_forward_and_get_cursor()
+                AgingTrackerNode *move_forward_and_get_cursor()
                 {
                         if (cursor == nullptr) {
                                 cursor = head;
@@ -119,14 +119,14 @@ class PolicyClock : public MigrationManager {
                 }
 
             private:
-                ClockTrackerNode *head{ nullptr };
-                ClockTrackerNode *tail{ nullptr };
-                ClockTrackerNode *cursor{ nullptr };
+                AgingTrackerNode *head{ nullptr };
+                AgingTrackerNode *tail{ nullptr };
+                AgingTrackerNode *cursor{ nullptr };
 
-                pthread_spinlock_t clock_tracker_lock;
+                pthread_spinlock_t aging_tracker_lock;
         };
 
-        PolicyClock(std::function<migration_result(ITable *, const void *, const std::tuple<std::atomic<uint64_t> *, void *> &, bool, void *&)> move_from_partition_to_shared_region,
+        PolicyAging(std::function<migration_result(ITable *, const void *, const std::tuple<std::atomic<uint64_t> *, void *> &, bool, void *&)> move_from_partition_to_shared_region,
                         std::function<bool(ITable *, const void *, const std::tuple<std::atomic<uint64_t> *, void *> &)> move_from_shared_region_to_partition,
                         std::function<bool(ITable *, const void *, bool, bool &, void *&)> delete_and_update_next_key_info,
                         uint64_t coordinator_id,
@@ -136,70 +136,70 @@ class PolicyClock : public MigrationManager {
         : MigrationManager(move_from_partition_to_shared_region, move_from_shared_region_to_partition, delete_and_update_next_key_info, when_to_move_out_str)
         , hw_cc_budget(hw_cc_budget)
         {
-                clock_trackers = new ClockTracker[partition_num];
+                aging_trackers = new AgingTracker[partition_num];
                 for (int i = 0; i < partition_num; i++) {
-                        new(&clock_trackers[i]) ClockTracker();
+                        new(&aging_trackers[i]) AgingTracker();
                 }
         }
 
         void init_migration_policy_metadata(void *migration_policy_meta, ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, uint64_t metadata_size) override
         {
-                ClockMeta *clock_meta = reinterpret_cast<ClockMeta *>(migration_policy_meta);
-                new(clock_meta) ClockMeta();
+                AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
+                new(aging_meta) AgingMeta();
         }
 
         void access_row(void *migration_policy_meta, uint64_t partition_id) override
         {
-                ClockMeta *clock_meta = reinterpret_cast<ClockMeta *>(migration_policy_meta);
-                clock_meta->second_chance = 1;
+                AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
+                aging_meta->second_chance = 1;
         }
 
         migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt) override
         {
-                ClockTracker &clock_tracker = clock_trackers[table->partitionID()];
+                AgingTracker &aging_tracker = aging_trackers[table->partitionID()];
                 void *migration_policy_meta = nullptr;
                 migration_result ret = migration_result::FAIL_OOM;
 
-                clock_tracker.lock();
+                aging_tracker.lock();
                 ret = move_from_partition_to_shared_region(table, key, row, inc_ref_cnt, migration_policy_meta);
                 if (ret == migration_result::SUCCESS) {
-                        ClockTrackerNode *clock_tracker_node = new ClockTrackerNode(table, key, row);
-                        clock_tracker_node->row_entity.migration_manager_meta = migration_policy_meta;
-                        clock_tracker.track(clock_tracker_node);
+                        AgingTrackerNode *aging_tracker_node = new AgingTrackerNode(table, key, row);
+                        aging_tracker_node->row_entity.migration_manager_meta = migration_policy_meta;
+                        aging_tracker.track(aging_tracker_node);
                 }
-                clock_tracker.unlock();
+                aging_tracker.unlock();
 
                 return ret;
         }
 
         bool move_row_out(uint64_t partition_id) override
         {
-                ClockTracker &clock_tracker = clock_trackers[partition_id];
+                AgingTracker &aging_tracker = aging_trackers[partition_id];
                 bool ret = false;
 
-                clock_tracker.lock();
+                aging_tracker.lock();
                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
-                        clock_tracker.unlock();
+                        aging_tracker.unlock();
                         return ret;
                 }
 
                 while (true) {
-                        ClockTrackerNode *victim = clock_tracker.move_forward_and_get_cursor();
+                        AgingTrackerNode *victim = aging_tracker.move_forward_and_get_cursor();
                         if (victim == nullptr) {
                                 break;
                         } else {
                                 migrated_row_entity victim_row_entity = victim->row_entity;
-                                ClockMeta *clock_meta = reinterpret_cast<ClockMeta *>(victim_row_entity.migration_manager_meta);
-                                if (clock_meta->second_chance == 1) {
-                                        clock_meta->second_chance = 0;
+                                AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(victim_row_entity.migration_manager_meta);
+                                if (aging_meta->second_chance == 1) {
+                                        aging_meta->second_chance = 0;
                                         continue;
                                 }
                                 bool move_out_success = false;
                                 move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                                 if (move_out_success == true) {
-                                        clock_tracker.move_forward_and_get_cursor();
-                                        clock_tracker.untrack(victim);
-                                        // clock_tracker.reset_cursor();
+                                        aging_tracker.move_forward_and_get_cursor();
+                                        aging_tracker.untrack(victim);
+                                        // aging_tracker.reset_cursor();
                                         if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
                                                 ret = true;
                                                 break;
@@ -207,8 +207,8 @@ class PolicyClock : public MigrationManager {
                                 }
                         }
                 }
-                // clock_tracker.reset_cur_victim();
-                clock_tracker.unlock();
+                // aging_tracker.reset_cur_victim();
+                aging_tracker.unlock();
 
                 return ret;
         }
@@ -216,18 +216,18 @@ class PolicyClock : public MigrationManager {
         bool delete_specific_row_and_move_out(ITable *table, const void *key, bool is_delete_local) override
         {
                 // key is unused
-                ClockTracker &clock_tracker = clock_trackers[table->partitionID()];
+                AgingTracker &aging_tracker = aging_trackers[table->partitionID()];
                 void *migration_policy_meta = nullptr;
                 bool need_move_out = false, ret = false;
 
-                clock_tracker.lock();
+                aging_tracker.lock();
 
                 // delete and update next key information
                 ret = delete_and_update_next_key_info(table, key, is_delete_local, need_move_out, migration_policy_meta);
                 CHECK(ret == true);
                 CHECK(need_move_out == false);
 
-                clock_tracker.unlock();
+                aging_tracker.unlock();
 
                 return ret;
         }
@@ -235,7 +235,7 @@ class PolicyClock : public MigrationManager {
     private:
         uint64_t hw_cc_budget{ 0 };
 
-        ClockTracker *clock_trackers{ nullptr };
+        AgingTracker *aging_trackers{ nullptr };
 };
 
 } // namespace star
