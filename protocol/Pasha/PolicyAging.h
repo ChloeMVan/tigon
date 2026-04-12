@@ -199,25 +199,20 @@ class PolicyAging : public MigrationManager {
                     return ret;
                 }
 
-                while (true) {
-                    if (aging_tracker.is_empty()) break;
-                    AgingTrackerNode *victim = aging_tracker.get_min_age_victim();
-                    if (victim == nullptr) {
-                        break;
-                    } else {
-                        migrated_row_entity victim_row_entity = victim->row_entity;
-                        bool move_out_success = false;
-                        move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
-                        if (move_out_success == true) {
-                            aging_tracker.untrack(victim);
-                            delete victim;
-                            // aging_tracker.reset_cursor();
-                            if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
-                                ret = true;
-                                break;
-                            }
+                AgingTrackerNode *cur = aging_tracker.head;
+                while (cur != nullptr) {
+                    AgingTrackerNode *next = cur->next;
+                    migrated_row_entity victim_row_entity = cur->row_entity;
+                    bool move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
+                    if (move_out_success == true) {
+                        aging_tracker.untrack(cur);
+                        delete cur;
+                        if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
+                            ret = true;
+                            break;
                         }
                     }
+                    cur = next;
                 }
                 // aging_tracker.reset_cur_victim();
                 aging_tracker.unlock();

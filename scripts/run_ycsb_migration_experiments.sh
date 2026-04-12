@@ -114,11 +114,17 @@ run_one() {
   } > "$OUT_FILE"
 
   cd "$REPO_ROOT"
+  local run_exit=0
   ./scripts/run.sh YCSB "$PROTOCOL" "$HOST_NUM" "$WORKER_NUM" "$QUERY_TYPE" \
     "$KEYS" "$RW_RATIO" "$ZIPF_THETA" "$CROSS_RATIO" \
     "$USE_CXL_TRANS" "$USE_OUTPUT_THREAD" "$ENABLE_MIGRATION_OPTIMIZATION" "$POLICY" "$WHEN_TO_MOVE_OUT" "$HW_CC_BUDGET" \
     "$ENABLE_SCC" "$SCC_MECH" "$PRE_MIGRATE" "$TIME_TO_RUN" "$TIME_TO_WARMUP" "$LOGGING_TYPE" "$EPOCH_LEN" "$MODEL_CXL_SEARCH" "$GATHER_OUTPUT" \
-    >> "$OUT_FILE" 2>&1
+    >> "$OUT_FILE" 2>&1 || run_exit=$?
+
+  if [[ $run_exit -ne 0 ]]; then
+    echo "FAILURE: experiment '$LABEL' exited with code $run_exit. Stopping." >&2
+    exit $run_exit
+  fi
 
   echo "  done."
 }
