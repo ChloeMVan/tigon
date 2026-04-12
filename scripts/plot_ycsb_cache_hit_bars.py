@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Need to run parse_ycsb_migration_results.py first
+
 Bar graphs: cache hit rate, avg latency, or total commit (y) vs rw_ratio, zipf_theta, or cross_value (x).
 Each group has 4 bars: LRU-rmw, LRU-scan, Clock-rmw, Clock-scan.
 
@@ -26,12 +28,14 @@ BAR_ORDER = [
     ("LRU", "scan"),
     ("Clock", "rmw"),
     ("Clock", "scan"),
+    ("Aging", "rmw"),
+    ("Aging", "scan"),
 ]
 
 RW_RATIOS = [10, 50, 90]
 ZIPF_THETAS = [0.5, 0.7, 0.99]
 
-COLORS = ["#2ecc71", "#27ae60", "#3498db", "#2980b9"]
+COLORS = ["#2ecc71", "#27ae60", "#3498db", "#2980b9", "#e74c3c", "#c0392b"]
 
 # (csv_column, ylabel, ylim_low, ylim_high) — None for auto
 METRICS = [
@@ -98,6 +102,8 @@ def make_legend(ax):
         Patch(facecolor=COLORS[1], label="LRU, scan"),
         Patch(facecolor=COLORS[2], label="Clock, rmw"),
         Patch(facecolor=COLORS[3], label="Clock, scan"),
+        Patch(facecolor=COLORS[4], label="Aging, rmw"),
+        Patch(facecolor=COLORS[5], label="Aging, scan"),
     ]
     ax.legend(handles=legend_elements, loc="upper right", ncol=2)
 
@@ -137,10 +143,10 @@ def _plot_grouped_bars(data, groups, group_labels, xlabel, metric_key, ylabel, t
     plt.title(title)
     plt.tight_layout()
     out = RESULTS_DIR / output_stem
-    plt.savefig(out.with_suffix(".pdf"), bbox_inches="tight")
+    #plt.savefig(out.with_suffix(".pdf"), bbox_inches="tight")
     plt.savefig(out.with_suffix(".png"), bbox_inches="tight", dpi=150)
     plt.close()
-    print(f"Saved {out}.pdf and .png")
+    print(f"Saved {out}.png")
 
 
 def plot_by_rw_ratio(metrics_to_plot):
