@@ -54,13 +54,16 @@ template <class Transaction> class Workload {
                 std::string transactionType;
 		random.set_seed(random_seed);
                 if (context.workloadType == YCSBWorkloadType::MIXED) {
-                        if (x <= 80) {
+                        if (x <= 50) { // tweaked
                                 p = std::make_unique<Scan<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
-                        } else if (x <= 90) {
-                                p = std::make_unique<Insert<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
-                        } else {
-                                p = std::make_unique<Delete<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
+						} else {
+                                p = std::make_unique<ReadModifyWrite<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
                         }
+                        // } else if (x <= 90) {
+                        //         p = std::make_unique<Insert<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
+                        // } else {
+                        //         p = std::make_unique<Delete<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
+                        // }
                 } else if (context.workloadType == YCSBWorkloadType::RMW) {
                         p = std::make_unique<ReadModifyWrite<Transaction> >(coordinator_id, partition_id, granule_id, db, context, random, partitioner);
                 } else if (context.workloadType == YCSBWorkloadType::SCAN) {
