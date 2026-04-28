@@ -177,6 +177,10 @@ class PolicyClock : public MigrationManager {
                 ClockTracker &clock_tracker = clock_trackers[partition_id];
                 bool ret = false;
 
+                LOG(INFO) << "[Clock] move_row_out called: partition=" << partition_id
+                          << " hw_cc_usage=" << cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE)
+                          << " budget=" << hw_cc_budget;
+
                 clock_tracker.lock();
                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
                         clock_tracker.unlock();
@@ -194,6 +198,7 @@ class PolicyClock : public MigrationManager {
                                         clock_meta->second_chance = 0;
                                         continue;
                                 }
+                                LOG(INFO) << "[Clock] evicting node=";
                                 bool move_out_success = false;
                                 move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                                 if (move_out_success == true) {
