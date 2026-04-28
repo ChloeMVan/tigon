@@ -21,6 +21,15 @@ sudo apt-get install -y cargo
 sudo apt-get install -y rustc 
 sudo apt-get install -y libguestfs-tools
 
+# other installations, sometimes not needed
+sudo apt-get install numactl
+sudo apt-get install libgoogle-glog0v5 libgflags2.2
+sudo apt-get install cmake build-essential
+sudo apt-get install clang-15
+sudo apt install libgoogle-glog-dev libgflags-dev
+sudo apt-get install libboost-dev libboost-all-dev
+sudo apt-get install lld-15
+
 #github
 ssh-keygen -t ed25519 -C “cvancaemelbecke@gmail.com”
 eval "$(ssh-agent -s)"
@@ -32,5 +41,7 @@ ssh -T git@github.com
 # connect to github
 git clone git@github.com:ChloeMVan/tigon.git
 
+sudo ./emulation/start_vms.sh --using-old-img --cxl 0 5 2 1 1
+
 # example run
-./scripts/run.sh YCSB TwoPLPasha 2 3 mixed 300000 50 0.7 10 1 0 1 Clock OnDemand 200000000 1 WriteThrough None 30 10 GROUP_WAL 20000 0 0
+./scripts/run.sh YCSB TwoPLPasha 2 3 rmw 300000 50 0.7 10 1 0 1 Clock OnDemand 200000000 1 WriteThrough None 30 10 GROUP_WAL 20000 0 0

@@ -199,7 +199,7 @@ class PolicyAging : public MigrationManager {
                                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(node->row_entity.migration_manager_meta);
                                 
                                 // aging counter
-                                aging_meta->counter = aging_meta->counter << 1
+                                aging_meta->counter = aging_meta->counter << 1;
                                 if (aging_meta->counter < min_counter) {
                                         min_counter = aging_meta->counter;
                                         min_victim = node;
