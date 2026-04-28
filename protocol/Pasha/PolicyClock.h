@@ -177,9 +177,9 @@ class PolicyClock : public MigrationManager {
                 ClockTracker &clock_tracker = clock_trackers[partition_id];
                 bool ret = false;
 
-                LOG(INFO) << "[Clock] move_row_out called: partition=" << partition_id
-                          << " hw_cc_usage=" << cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE)
-                          << " budget=" << hw_cc_budget;
+                // LOG(INFO) << "[Clock] move_row_out called: partition=" << partition_id
+                //           << " hw_cc_usage=" << cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE)
+                //           << " budget=" << hw_cc_budget;
 
                 clock_tracker.lock();
                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
