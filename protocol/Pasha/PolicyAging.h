@@ -191,15 +191,18 @@ class PolicyAging : public MigrationManager {
                         uint8_t min_counter = UINT8_MAX;
 
                         // aging_tracker.reset_cursor();
+                        LOG(INFO) << "[Aging] starting sweep for partition " << partition_id;
                         while (true) {
                                 AgingTrackerNode *node = aging_tracker.move_forward_and_get_cursor();
                                 if (node == nullptr) {
                                         break;
                                 }
                                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(node->row_entity.migration_manager_meta);
-                                
+
                                 // aging counter
                                 aging_meta->counter = aging_meta->counter << 1;
+                                LOG(INFO) << "[Aging]   node=" << node << " counter=" << (int)aging_meta->counter
+                                          << (aging_meta->counter < min_counter ? " (new min)" : "");
                                 if (aging_meta->counter < min_counter) {
                                         min_counter = aging_meta->counter;
                                         min_victim = node;
@@ -208,9 +211,11 @@ class PolicyAging : public MigrationManager {
                         // aging_tracker.reset_cursor();
 
                         if (min_victim == nullptr) {
+                                LOG(INFO) << "[Aging] list empty, nothing to evict";
                                 break;
                         }
 
+                        LOG(INFO) << "[Aging] evicting node=" << min_victim << " counter=" << (int)min_counter;
                         migrated_row_entity victim_row_entity = min_victim->row_entity;
                         bool move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                         if (move_out_success == true) {
