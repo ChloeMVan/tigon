@@ -180,6 +180,9 @@ class PolicyAging : public MigrationManager {
                 bool ret = false;
 
                 aging_tracker.lock();
+                LOG(INFO) << "[Aging] move_row_out called: partition=" << partition_id
+                          << " hw_cc_usage=" << cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE)
+                          << " budget=" << hw_cc_budget;
                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
                         aging_tracker.unlock();
                         return ret;
