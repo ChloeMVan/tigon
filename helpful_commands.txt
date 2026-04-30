@@ -47,21 +47,79 @@ sudo ./emulation/start_vms.sh --using-old-img --cxl 0 5 2 1 1
 ./scripts/run.sh YCSB TwoPLPasha 2 3 rmw 300000 50 0.7 10 1 0 1 Aging OnDemand 200000000 1 WriteThrough None 30 10 GROUP_WAL 20000 0 0
 
 
-# instructions 
+# instructions from scratch
 
-Launch VMS:
+# clone github
+
+git clone git@github.com:ChloeMVan/tigon.git
+
+./scripts/setup.sh HOST
+
+# Download all this nonesense
+
+# needed imports
+sudo apt-get update
+sudo apt-get install -y libjemalloc-dev
+sudo apt-get install python3-pip
+sudo pip3 install pyroute2
+sudo apt-get install mkosi
+sudo apt-get install -y cargo
+sudo apt-get install -y rustc 
+sudo apt-get install -y libguestfs-tools
+
+# build VM image
+
+./emulation/image/make_vm_img.sh
+
+# Launch VMs
 
 sudo ./emulation/start_vms.sh --using-old-img --cxl 0 5 2 1 1
 
-setup VMs:
+# Setup VMs
 
-./scripts/setup.sh VMS 8
+./scripts/setup.sh VMS 2
 
-compile VMs:
+# compile (if issues with compilation 
+run this: rm -rf ~/tigon/build
+
+then download this stuff:
+sudo apt-get install numactl
+sudo apt-get install libgoogle-glog0v5 libgflags2.2
+sudo apt-get install cmake build-essential
+sudo apt-get install clang-15
+sudo apt install libgoogle-glog-dev libgflags-dev
+sudo apt-get install libboost-dev libboost-all-dev
+sudo apt-get install lld-15
+)
 
 ./scripts/run.sh COMPILE_SYNC 2
 
-Example workload: (make sure you set to 2 VMs)
+
+# Instructions for recompiling 
+
+rm -rf ~/tigon/build
+
+./scripts/run.sh COMPILE_SYNC 2
+
+
+
+
+
+# instructions after setup
+
+# Launch VMS:
+
+sudo ./emulation/start_vms.sh --using-old-img --cxl 0 5 2 1 1
+
+# setup VMs:
+
+./scripts/setup.sh VMS 8
+
+# compile VMs:
+
+./scripts/run.sh COMPILE_SYNC 2
+
+# Example workload: (make sure you set to 2 VMs)
 
 ./scripts/run.sh YCSB TwoPLPasha 2 3 rmw 300000 50 0.7 10 1 0 1 Aging OnDemand 200000000 1 WriteThrough None 30 10 GROUP_WAL 20000 0 0
 
