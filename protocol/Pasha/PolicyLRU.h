@@ -195,7 +195,7 @@ class PolicyLRU : public MigrationManager {
                 lru_tracker.unlock();
         }
 
-        migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt) override
+        migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt, bool is_scan = false) override
         {
                 LRUTracker &lru_tracker = lru_trackers[table->partitionID()];
                 void *migration_policy_meta = nullptr;

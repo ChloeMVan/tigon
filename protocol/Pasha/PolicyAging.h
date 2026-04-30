@@ -19,7 +19,8 @@ class PolicyAging : public MigrationManager {
     public:
         struct AgingMeta {
                 // uint8_t second_chance = 0;
-                uint8_t counter = 0;
+                uint8_t counter = 0x80; // 1000 0000
+                bool is_scan = false;
         };
 
         struct AgingTrackerNode {
@@ -153,10 +154,10 @@ class PolicyAging : public MigrationManager {
         {
                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
                 // aging_meta->second_chance = 1; // need to change
-                aging_meta->counter = aging_meta->counter | 1;
+                aging_meta->counter = aging_meta->counter | 0x80;
         }
 
-        migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt) override
+        migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt, bool is_scan = false) override
         {
                 AgingTracker &aging_tracker = aging_trackers[table->partitionID()];
                 void *migration_policy_meta = nullptr;
@@ -165,6 +166,8 @@ class PolicyAging : public MigrationManager {
                 aging_tracker.lock();
                 ret = move_from_partition_to_shared_region(table, key, row, inc_ref_cnt, migration_policy_meta);
                 if (ret == migration_result::SUCCESS) {
+                        AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
+                        aging_meta->is_scan = is_scan;
                         AgingTrackerNode *aging_tracker_node = new AgingTrackerNode(table, key, row);
                         aging_tracker_node->row_entity.migration_manager_meta = migration_policy_meta;
                         aging_tracker.track(aging_tracker_node);
@@ -180,9 +183,9 @@ class PolicyAging : public MigrationManager {
                 bool ret = false;
 
                 aging_tracker.lock();
-                LOG(INFO) << "[Aging] move_row_out called: partition=" << partition_id
-                          << " hw_cc_usage=" << cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE)
-                          << " budget=" << hw_cc_budget;
+                // LOG(INFO) << "[Aging] move_row_out called: partition=" << partition_id
+                //           << " hw_cc_usage=" << cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE)
+                //           << " budget=" << hw_cc_budget;
                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
                         aging_tracker.unlock();
                         return ret;
@@ -203,7 +206,7 @@ class PolicyAging : public MigrationManager {
                                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(node->row_entity.migration_manager_meta);
 
                                 // aging counter
-                                aging_meta->counter = aging_meta->counter << 1;
+                                aging_meta->counter = aging_meta->counter >> 1;
                                 LOG(INFO) << "[Aging]   node=" << node << " counter=" << (int)aging_meta->counter
                                           << (aging_meta->counter < min_counter ? " (new min)" : "");
                                 if (aging_meta->counter < min_counter) {
