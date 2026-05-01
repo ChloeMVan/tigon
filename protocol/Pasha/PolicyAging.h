@@ -225,8 +225,9 @@ class PolicyAging : public MigrationManager {
                         migrated_row_entity victim_row_entity = min_victim->row_entity;
                         bool move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                         if (move_out_success == true) {
-                                aging_tracker.move_forward_and_get_cursor();
                                 aging_tracker.untrack(min_victim);
+                                delete min_victim;
+                                aging_tracker.reset_cursor();
                                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
                                         ret = true;
                                         break;
