@@ -240,6 +240,7 @@ class PolicyLRU : public MigrationManager {
                                 bool move_out_success = false;
                                 move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                                 if (move_out_success == true) {
+                                        LOG(INFO) << "[LRU] evicting node";
                                         lru_tracker.untrack(victim);
                                         lru_tracker.reset_cur_victim();
                                         delete victim->row_entity_ptr;
