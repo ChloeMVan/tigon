@@ -155,6 +155,7 @@ class PolicyAging : public MigrationManager {
                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
                 // aging_meta->second_chance = 1; // need to change
                 aging_meta->counter = aging_meta->counter | 0x80;
+                LOG(INFO) << "[Aging] access_row called: counter now=" << (int)aging_meta->counter;
         }
 
         migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt, bool is_scan = false) override
