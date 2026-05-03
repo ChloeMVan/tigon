@@ -215,6 +215,9 @@ class PolicyAging : public MigrationManager {
                                         min_counter = aging_meta->counter;
                                         min_victim = node;
                                 }
+                                if (min_counter == 0) {
+                                        break;
+                                }
                         }
                         // aging_tracker.reset_cursor();
 
