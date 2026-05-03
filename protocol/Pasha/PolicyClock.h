@@ -194,7 +194,7 @@ class PolicyClock : public MigrationManager {
                                         clock_meta->second_chance = 0;
                                         continue;
                                 }
-                                LOG(INFO) << "[Clock] evicting node=";
+                                LOG(INFO) << "[Clock] evicting node";
                                 bool move_out_success = false;
                                 move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                                 if (move_out_success == true) {
