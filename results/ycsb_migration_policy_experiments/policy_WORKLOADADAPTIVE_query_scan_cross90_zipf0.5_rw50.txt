@@ -1,0 +1,42 @@
+# YCSB migration policy experiment
+# query_type=scan rw_ratio=50 zipf_theta=0.5 cross_ratio=90
+# policy=WORKLOADADAPTIVE when_to_move_out=OnDemand hw_cc_budget_mb=4
+# host_num=2 worker_num=3 keys=200000 repeat=1
+# time_to_run=30 time_to_warmup=10
+# timestamp=2026-05-03T20:25:42-06:00
+---
+killing previous experiments...
+deleting log files...
+initializing cxl memory...
+I0503 20:26:27.520931 11683 bench_ycsb.cpp:66] RW_RATIO = 50, ZIPF_THETA = 0.5, CROSS_RATIO = 90
+I0503 20:26:27.521027 11683 bench_ycsb.cpp:67] checkpoint 0 to 
+I0503 20:26:27.521034 11683 bench_ycsb.cpp:68] cross_part_num 2
+I0503 20:26:27.521040 11683 bench_ycsb.cpp:69] lotus_sp_parallel_exec_commit 0
+I0503 20:26:27.521046 11683 bench_ycsb.cpp:70] granules_per_partition 2000
+I0503 20:26:27.521054 11683 bench_ycsb.cpp:71] keysPerGranule 100
+I0503 20:26:31.251077 11683 Database.h:81] ycsb initialization finished in 3720 milliseconds.
+I0503 20:26:31.392728 11683 CXLMemory.h:57] cxlalloc initialized for thread 0 (global ID = 0) on host 0
+I0503 20:26:31.392760 11683 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0503 20:26:31.398524 11683 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0503 20:26:31.404194 11683 Coordinator.h:422] Coordinator 0 initializes CXL transport metadata (2 ringbuffers each with 8192 entries (each 2039 Bytes)
+I0503 20:26:31.404214 11683 Coordinator.h:444] created global CXL EBR metadata
+I0503 20:26:31.404336 11683 Coordinator.h:97] WAL Group Commiting off. Log to file /root/pasha_log_non_group_commit.txt using Blackhole Logger
+I0503 20:26:31.404346 11683 Coordinator.h:101] Coordinator initializes 3 workers.
+I0503 20:26:31.404490 11683 Database.h:227] YCSB initializes data migration metadata
+I0503 20:26:31.404500 11683 TwoPLPashaExecutor.h:52] total hardware budget = 5000000 per host = 1975712
+F0503 20:26:31.404511 11683 MigrationManagerFactory.h:165] Check failed: 0 
+*** Check failure stack trace: ***
+    @     0x7f41f0730b03  google::LogMessage::Fail()
+    @     0x7f41f07389d1  google::LogMessage::SendToLog()
+    @     0x7f41f07307c2  google::LogMessage::Flush()
+    @     0x7f41f073278f  google::LogMessageFatal::~LogMessageFatal()
+    @           0x3e2b26  star::MigrationManagerFactory::create_migration_manager()
+    @           0x42b3f3  star::TwoPLPashaExecutor<>::TwoPLPashaExecutor()
+    @           0x3b0b69  star::WorkerFactory::create_workers<>()
+    @           0x36d73e  star::Coordinator::Coordinator<>()
+    @           0x368ba9  main
+    @     0x7f41efc29d90  (unknown)
+    @     0x7f41efc29e40  __libc_start_main
+    @           0x3653f5  _start
+    @              (nil)  (unknown)
+killing previous experiments...
