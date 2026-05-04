@@ -370,6 +370,10 @@ class Coordinator {
                 if (scc_manager != nullptr)
                         scc_manager->print_stats();
 
+                // print migration policy stats (e.g. scan detector confusion matrix)
+                if (migration_manager != nullptr)
+                        migration_manager->print_statistics();
+
 		// gather throughput
 		gather_and_print(1.0 * total_commit / count,
                                 cxl_memory.get_stats(CXLMemory::INDEX_USAGE),
