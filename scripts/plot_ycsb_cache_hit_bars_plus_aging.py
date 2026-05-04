@@ -101,7 +101,7 @@ def make_legend(ax):
         Patch(facecolor=COLORS[2], label="Clock, rmw"),
         Patch(facecolor=COLORS[3], label="Clock, scan"),
         Patch(facecolor=COLORS[4], label="Aging, rmw"),
-        Patch(facecolor=COLORS[5], label="Agin, scan"),
+        Patch(facecolor=COLORS[5], label="Aging, scan"),
     ]
     ax.legend(handles=legend_elements, loc="upper right", ncol=2)
 
@@ -144,7 +144,7 @@ def _plot_grouped_bars(data, groups, group_labels, xlabel, metric_key, ylabel, t
     # plt.savefig(out.with_suffix(".pdf"), bbox_inches="tight")
     plt.savefig(out.with_suffix(".png"), bbox_inches="tight", dpi=150)
     plt.close()
-    print(f"Saved {out}.pdf and .png")
+    print(f"Saved {out}.png")
 
 
 def plot_by_rw_ratio(metrics_to_plot):
