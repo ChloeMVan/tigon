@@ -155,7 +155,7 @@ class PolicyAging : public MigrationManager {
                 AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
                 // aging_meta->second_chance = 1; // need to change
                 aging_meta->counter = aging_meta->counter | 0x80;
-                LOG(INFO) << "[Aging] access_row called: counter now=" << (int)aging_meta->counter;
+                // LOG(INFO) << "[Aging] access_row called: counter now=" << (int)aging_meta->counter;
         }
 
         migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt, bool is_scan = false) override
@@ -198,7 +198,7 @@ class PolicyAging : public MigrationManager {
                         uint8_t min_counter = UINT8_MAX;
 
                         // aging_tracker.reset_cursor();
-                        LOG(INFO) << "[Aging] starting sweep for partition " << partition_id;
+                        // LOG(INFO) << "[Aging] starting sweep for partition " << partition_id;
                         while (true) {
                                 AgingTrackerNode *node = aging_tracker.move_forward_and_get_cursor();
                                 if (node == nullptr) {
@@ -209,8 +209,8 @@ class PolicyAging : public MigrationManager {
                                 // aging counter
                                 int prev_c = (int)aging_meta->counter;
                                 aging_meta->counter = aging_meta->counter >> 1;
-                                LOG(INFO) << "[Aging]   node=" << node << " prev counter=" << prev_c << " counter=" << (int)aging_meta->counter
-                                          << (aging_meta->counter < min_counter ? " (new min)" : "");
+                                // LOG(INFO) << "[Aging]   node=" << node << " prev counter=" << prev_c << " counter=" << (int)aging_meta->counter
+                                //           << (aging_meta->counter < min_counter ? " (new min)" : "");
                                 if (aging_meta->counter < min_counter) {
                                         min_counter = aging_meta->counter;
                                         min_victim = node;
@@ -222,11 +222,11 @@ class PolicyAging : public MigrationManager {
                         // aging_tracker.reset_cursor();
 
                         if (min_victim == nullptr) {
-                                LOG(INFO) << "[Aging] list empty, nothing to evict";
+                                // LOG(INFO) << "[Aging] list empty, nothing to evict";
                                 break;
                         }
 
-                        LOG(INFO) << "[Aging] evicting node=" << min_victim << " counter=" << (int)min_counter;
+                        // LOG(INFO) << "[Aging] evicting node=" << min_victim << " counter=" << (int)min_counter;
                         migrated_row_entity victim_row_entity = min_victim->row_entity;
                         bool move_out_success = move_from_shared_region_to_partition(victim_row_entity.table, victim_row_entity.key, victim_row_entity.local_row);
                         if (move_out_success == true) {
