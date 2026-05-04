@@ -129,14 +129,14 @@ class PolicyLRU : public MigrationManager {
                         LRUMeta *cur_node = head.get();
                         uint64_t i = 0;
 
-                        LOG(INFO) << "LRU list status:";
+                        // LOG(INFO) << "LRU list status:";
                         while (true) {
                                 if (cur_node == nullptr) {
                                         break;
                                 } else {
                                         ITable *table = cur_node->row_entity_ptr->table;
                                         const void *key = cur_node->row_entity_ptr->key;
-                                        LOG(INFO) << "ID = " << i << " key = " << table->get_plain_key(key);
+                                        // LOG(INFO) << "ID = " << i << " key = " << table->get_plain_key(key);
                                 }
                                 i++;
                                 cur_node = cur_node->next.get();

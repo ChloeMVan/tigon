@@ -71,7 +71,7 @@ kill_prev_exps() {
   for (( i = 0; i < n; i++ )); do
     ssh_command "pkill bench_ycsb || true" "$i" 2>/dev/null || true
   done
-  sleep 2
+  sleep 5
 }
 
 # run.sh YCSB: PROTOCOL HOST_NUM WORKER_NUM QUERY_TYPE KEYS RW_RATIO ZIPF_THETA CROSS_RATIO
