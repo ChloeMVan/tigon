@@ -24,16 +24,19 @@ CSV_PATH = RESULTS_DIR / "ycsb_migration_experiments.csv"
 BAR_ORDER = [
     ("LRU", "rmw"),
     ("LRU", "scan"),
+    ("LRU", "mixed"),
     ("Clock", "rmw"),
     ("Clock", "scan"),
+    ("Clock", "mixed"),
     ("Aging", "rmw"),
     ("Aging", "scan"),
+    ("Aging", "mixed"),
 ]
 
 RW_RATIOS = [10, 50, 90]
 ZIPF_THETAS = [0.5, 0.7, 0.99]
 
-COLORS = ["#2ecc71", "#27ae60", "#3498db", "#2980b9", "#db3434", "#aa2828"]
+COLORS = ["#2ecc71", "#27ae60","#19733e", "#3498db", "#2980b9", "#1B577F", "#db3434", "#aa2828", "#6c1818"]
 
 # (csv_column, ylabel, ylim_low, ylim_high) — None for auto
 METRICS = [
@@ -98,10 +101,13 @@ def make_legend(ax):
     legend_elements = [
         Patch(facecolor=COLORS[0], label="LRU, rmw"),
         Patch(facecolor=COLORS[1], label="LRU, scan"),
-        Patch(facecolor=COLORS[2], label="Clock, rmw"),
-        Patch(facecolor=COLORS[3], label="Clock, scan"),
-        Patch(facecolor=COLORS[4], label="Aging, rmw"),
-        Patch(facecolor=COLORS[5], label="Aging, scan"),
+        Patch(facecolor=COLORS[2], label="LRU, mixed"),
+        Patch(facecolor=COLORS[3], label="Clock, rmw"),
+        Patch(facecolor=COLORS[4], label="Clock, scan"),
+        Patch(facecolor=COLORS[5], label="Clock, mixed"),
+        Patch(facecolor=COLORS[6], label="Aging, rmw"),
+        Patch(facecolor=COLORS[7], label="Aging, scan"),
+        Patch(facecolor=COLORS[8], label="Aging, mixed"),
     ]
     ax.legend(handles=legend_elements, loc="upper right", ncol=2)
 
