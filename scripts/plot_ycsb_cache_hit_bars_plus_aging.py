@@ -139,7 +139,7 @@ def _plot_grouped_bars(data, groups, group_labels, xlabel, metric_key, ylabel, t
     plt.title(title)
     plt.tight_layout()
     out = RESULTS_DIR / output_stem
-    plt.savefig(out.with_suffix(".pdf"), bbox_inches="tight")
+    # plt.savefig(out.with_suffix(".pdf"), bbox_inches="tight")
     plt.savefig(out.with_suffix(".png"), bbox_inches="tight", dpi=150)
     plt.close()
     print(f"Saved {out}.pdf and .png")
