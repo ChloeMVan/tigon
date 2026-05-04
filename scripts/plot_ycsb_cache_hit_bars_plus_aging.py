@@ -100,6 +100,8 @@ def make_legend(ax):
         Patch(facecolor=COLORS[1], label="LRU, scan"),
         Patch(facecolor=COLORS[2], label="Clock, rmw"),
         Patch(facecolor=COLORS[3], label="Clock, scan"),
+        Patch(facecolor=COLORS[4], label="Aging, rmw"),
+        Patch(facecolor=COLORS[5], label="Agin, scan"),
     ]
     ax.legend(handles=legend_elements, loc="upper right", ncol=2)
 
