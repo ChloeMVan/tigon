@@ -18,7 +18,7 @@ namespace star
 class PolicyClock : public MigrationManager {
     public:
         struct ClockMeta {
-                uint8_t second_chance = 0;
+                uint8_t second_chance = 1;
         };
 
         struct ClockTrackerNode {
