@@ -127,8 +127,8 @@ def _plot_grouped_bars(data, groups, group_labels, xlabel, metric_key, ylabel, t
         group_center = i * (group_width + gap_between_groups)
         for j, (policy, query_type) in enumerate(BAR_ORDER):
             key = (group_val, policy, query_type)
-            # if key not in data or data[key].get(metric_key) is None:
-            #     continue
+            if key not in data or data[key].get(metric_key) is None:
+                continue
             x = group_center + j * bar_width
             ax.bar(x, data[key][metric_key], bar_width, color=COLORS[j])
 
