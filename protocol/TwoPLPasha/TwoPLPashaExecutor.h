@@ -187,6 +187,9 @@ class TwoPLPashaExecutor : public Executor<Workload, TwoPLPasha<typename Workloa
                                 }
 
                                 if (local_scan) {
+                                        // statistics
+                                        this->n_local_access.fetch_add(1);
+
                                         // we do the next-key locking logic inside this function
                                         bool scan_success = true;       // it is possible that the range is empty - we accept this case
                                         auto local_scan_processor = [&](const void *key, std::atomic<uint64_t> *meta_ptr, void *data_ptr, bool is_last_tuple) -> bool {
@@ -260,6 +263,9 @@ class TwoPLPashaExecutor : public Executor<Workload, TwoPLPasha<typename Workloa
                                         migration_required = false;     // local scan does not require data migration
                                         return scan_success;
                                 } else {
+                                        // statistics
+                                        this->n_remote_access.fetch_add(1);
+
                                         // we do the next-key locking logic inside this function
                                         bool scan_success = false;       // it is possible that the range is empty - we return fail and abort in this case
                                         auto remote_scan_processor = [&](const void *key, void *cxl_row, bool is_last_tuple) -> bool {
@@ -365,6 +371,8 @@ class TwoPLPashaExecutor : public Executor<Workload, TwoPLPasha<typename Workloa
 
                                         if (migration_required == true) {
                                                 DCHECK(scan_success == false);
+                                                // statistics
+                                                this->n_remote_access_with_req.fetch_add(1);
                                                 // data is not in the shared region
                                                 // ask the remote host to do the data migration
                                                 auto coordinatorID = this->partitioner->master_coordinator(partition_id);
@@ -456,6 +464,9 @@ class TwoPLPashaExecutor : public Executor<Workload, TwoPLPasha<typename Workloa
                                 }
 
                                 if (local_scan) {
+                                        // statistics
+                                        this->n_local_access.fetch_add(1);
+
                                         auto local_scan_processor = [&](const void *key, std::atomic<uint64_t> *meta_ptr, void *data_ptr, bool is_last_tuple) -> bool {
                                                 DCHECK(key != nullptr);
                                                 DCHECK(meta_ptr != nullptr);
