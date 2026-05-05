@@ -18,9 +18,7 @@ namespace star
 class PolicyAging : public MigrationManager {
     public:
         struct AgingMeta {
-                // uint8_t second_chance = 0;
-                uint8_t counter = 0x80; // 1000 0000
-                bool is_scan = false;
+                uint8_t counter = 0;
         };
 
         struct AgingTrackerNode {
@@ -167,8 +165,6 @@ class PolicyAging : public MigrationManager {
                 aging_tracker.lock();
                 ret = move_from_partition_to_shared_region(table, key, row, inc_ref_cnt, migration_policy_meta);
                 if (ret == migration_result::SUCCESS) {
-                        AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
-                        aging_meta->is_scan = is_scan;
                         AgingTrackerNode *aging_tracker_node = new AgingTrackerNode(table, key, row);
                         aging_tracker_node->row_entity.migration_manager_meta = migration_policy_meta;
                         aging_tracker.track(aging_tracker_node);

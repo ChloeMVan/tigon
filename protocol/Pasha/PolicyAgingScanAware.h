@@ -14,7 +14,7 @@ namespace star
 class PolicyAgingScanAware : public MigrationManager {
     public:
         struct AgingMeta {
-                uint8_t counter = 0x80; // 1000 0000
+                uint8_t counter = 0;
                 bool is_scan = false;
         };
 

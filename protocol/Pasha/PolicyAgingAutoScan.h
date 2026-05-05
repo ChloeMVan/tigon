@@ -17,7 +17,7 @@ class PolicyAgingAutoScan : public MigrationManager {
         static constexpr uint32_t SCAN_STREAK_THRESHOLD = 4;
 
         struct AgingMeta {
-                uint8_t counter = 0x80; // 1000 0000
+                uint8_t counter = 0;
                 bool is_scan = false;
         };
 
