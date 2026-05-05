@@ -193,6 +193,7 @@ class PolicyAgingAutoScan : public MigrationManager {
                         AgingTrackerNode *min_victim = nullptr;
                         uint8_t min_counter = UINT8_MAX;
 
+                        aging_tracker.reset_cursor();
                         while (true) {
                                 AgingTrackerNode *node = aging_tracker.move_forward_and_get_cursor();
                                 if (node == nullptr) break;

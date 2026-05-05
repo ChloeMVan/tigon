@@ -193,7 +193,7 @@ class PolicyAging : public MigrationManager {
                         AgingTrackerNode *min_victim = nullptr;
                         uint8_t min_counter = UINT8_MAX;
 
-                        // aging_tracker.reset_cursor();
+                        aging_tracker.reset_cursor();
                         // LOG(INFO) << "[Aging] starting sweep for partition " << partition_id;
                         while (true) {
                                 AgingTrackerNode *node = aging_tracker.move_forward_and_get_cursor();
