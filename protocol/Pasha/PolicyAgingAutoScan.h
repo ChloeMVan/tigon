@@ -26,7 +26,7 @@ namespace star
 // reaches 0 in 4 sweeps vs 8 for a point row, making it the preferred eviction target.
 class PolicyAgingAutoScan : public MigrationManager {
     public:
-        static constexpr uint32_t SCAN_STREAK_THRESHOLD = 4;
+        static constexpr uint32_t SCAN_STREAK_THRESHOLD = 8;
 
         struct AgingMeta {
                 uint8_t counter = 0x80; // 1000 0000
