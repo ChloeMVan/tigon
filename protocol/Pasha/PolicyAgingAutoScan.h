@@ -114,8 +114,6 @@ class PolicyAgingAutoScan : public MigrationManager {
 
                 void reset_cursor() { cursor = nullptr; }
 
-                ScanDetector scan_detector;
-
             private:
                 AgingTrackerNode *head{ nullptr };
                 AgingTrackerNode *tail{ nullptr };
@@ -160,9 +158,11 @@ class PolicyAgingAutoScan : public MigrationManager {
                 void *migration_policy_meta = nullptr;
                 migration_result ret = migration_result::FAIL_OOM;
 
+                thread_local ScanDetector scan_detector;
+
                 aging_tracker.lock();
 
-                bool detected_scan = aging_tracker.scan_detector.update(table, key);
+                bool detected_scan = scan_detector.update(table, key);
 
                 ret = move_from_partition_to_shared_region(table, key, row, inc_ref_cnt, migration_policy_meta);
                 if (ret == migration_result::SUCCESS) {
