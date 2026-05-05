@@ -75,6 +75,7 @@ class MigrationManager {
         virtual migration_result move_row_in(ITable *table, const void *key, const std::tuple<MetaDataType *, void *> &row, bool inc_ref_cnt, bool is_scan = false) = 0;
         virtual bool move_row_out(uint64_t partition_id) = 0;
         virtual bool delete_specific_row_and_move_out(ITable *table, const void *key, bool is_delete_local) = 0;
+        virtual void print_stats() {}
 
         // user-provided functions
         std::function<migration_result(ITable *, const void *, const std::tuple<std::atomic<uint64_t> *, void *> &, bool inc_ref_cnt, void *&)> move_from_partition_to_shared_region;

@@ -23,6 +23,8 @@ WORKER_LATENCY_RE = re.compile(
 )
 # txn commit latency: 204 us (50%) 222 us (75%) 374 us (95%) 449 us (99%) avg 220 us
 AVG_LATENCY_RE = re.compile(r"txn commit latency: .*? avg (\d+) us")
+# scan_detector_confusion: tp=1234 fp=567 tn=89012 fn=345
+SCAN_DETECTOR_RE = re.compile(r"scan_detector_confusion: tp=(\d+) fp=(\d+) tn=(\d+) fn=(\d+)")
 
 
 def parse_filename(name: str) -> dict | None:
@@ -63,6 +65,24 @@ def parse_file(path: Path) -> dict | None:
     m = AVG_LATENCY_RE.search(text)
     row["avg_latency_us"] = int(m.group(1)) if m else None
 
+    # scan detector confusion matrix (only present for AgingAutoScan)
+    m = SCAN_DETECTOR_RE.search(text)
+    if m:
+        tp, fp, tn, fn = int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4))
+        row["sd_tp"] = tp
+        row["sd_fp"] = fp
+        row["sd_tn"] = tn
+        row["sd_fn"] = fn
+        total = tp + fp + tn + fn
+        row["sd_precision"] = tp / (tp + fp) if (tp + fp) > 0 else None
+        row["sd_recall"]    = tp / (tp + fn) if (tp + fn) > 0 else None
+        row["sd_accuracy"]  = (tp + tn) / total if total > 0 else None
+        p, r = row["sd_precision"], row["sd_recall"]
+        row["sd_f1"] = 2 * p * r / (p + r) if (p and r and (p + r) > 0) else None
+    else:
+        row["sd_tp"] = row["sd_fp"] = row["sd_tn"] = row["sd_fn"] = None
+        row["sd_precision"] = row["sd_recall"] = row["sd_accuracy"] = row["sd_f1"] = None
+
     return row
 
 
@@ -88,6 +108,14 @@ def main():
             "lat_95_us": metrics["lat_95_us"],
             "lat_99_us": metrics["lat_99_us"],
             "total_commit": metrics["total_commit"],
+            "sd_tp": metrics["sd_tp"],
+            "sd_fp": metrics["sd_fp"],
+            "sd_tn": metrics["sd_tn"],
+            "sd_fn": metrics["sd_fn"],
+            "sd_precision": metrics["sd_precision"],
+            "sd_recall": metrics["sd_recall"],
+            "sd_accuracy": metrics["sd_accuracy"],
+            "sd_f1": metrics["sd_f1"],
         }
         rows.append(row)
 
@@ -103,6 +131,14 @@ def main():
         "lat_95_us",
         "lat_99_us",
         "total_commit",
+        "sd_tp",
+        "sd_fp",
+        "sd_tn",
+        "sd_fn",
+        "sd_precision",
+        "sd_recall",
+        "sd_accuracy",
+        "sd_f1",
     ]
     with open(OUTPUT_CSV, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)

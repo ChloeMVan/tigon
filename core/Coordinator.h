@@ -370,6 +370,10 @@ class Coordinator {
                 if (scc_manager != nullptr)
                         scc_manager->print_stats();
 
+                // print scan detector confusion matrix (AgingAutoScan only; no-op for other policies)
+                if (migration_manager != nullptr)
+                        migration_manager->print_stats();
+
 		// gather throughput
 		gather_and_print(1.0 * total_commit / count,
                                 cxl_memory.get_stats(CXLMemory::INDEX_USAGE),

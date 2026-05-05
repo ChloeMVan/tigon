@@ -2,6 +2,7 @@
 
 #include <mutex>
 #include <list>
+#include <atomic>
 #include "stdint.h"
 
 #include "common/CXLMemory.h"
@@ -164,6 +165,11 @@ class PolicyAgingAutoScan : public MigrationManager {
 
                 bool detected_scan = scan_detector.update(table, key);
 
+                if (is_scan && detected_scan)        tp_count.fetch_add(1, std::memory_order_relaxed);
+                else if (!is_scan && detected_scan)  fp_count.fetch_add(1, std::memory_order_relaxed);
+                else if (is_scan && !detected_scan)  fn_count.fetch_add(1, std::memory_order_relaxed);
+                else                                 tn_count.fetch_add(1, std::memory_order_relaxed);
+
                 ret = move_from_partition_to_shared_region(table, key, row, inc_ref_cnt, migration_policy_meta);
                 if (ret == migration_result::SUCCESS) {
                         AgingMeta *aging_meta = reinterpret_cast<AgingMeta *>(migration_policy_meta);
@@ -250,10 +256,28 @@ class PolicyAgingAutoScan : public MigrationManager {
                 return ret;
         }
 
+        void print_stats() override
+        {
+                uint64_t tp = tp_count.load();
+                uint64_t fp = fp_count.load();
+                uint64_t tn = tn_count.load();
+                uint64_t fn = fn_count.load();
+                LOG(INFO) << "scan_detector_confusion:"
+                          << " tp=" << tp
+                          << " fp=" << fp
+                          << " tn=" << tn
+                          << " fn=" << fn;
+        }
+
     private:
         uint64_t hw_cc_budget{ 0 };
 
         AgingTracker *aging_trackers{ nullptr };
+
+        std::atomic<uint64_t> tp_count{0};
+        std::atomic<uint64_t> fp_count{0};
+        std::atomic<uint64_t> tn_count{0};
+        std::atomic<uint64_t> fn_count{0};
 };
 
 } // namespace star
