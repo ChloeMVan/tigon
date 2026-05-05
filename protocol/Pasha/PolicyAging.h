@@ -191,6 +191,7 @@ class PolicyAging : public MigrationManager {
                         aging_tracker.unlock();
                         return ret;
                 }
+                aging_tracker.reset_cursor();
 
                 while (true) {
                         // full sweep to find the node with the lowest counter
@@ -215,9 +216,9 @@ class PolicyAging : public MigrationManager {
                                         min_counter = aging_meta->counter;
                                         min_victim = node;
                                 }
-                                if (min_counter == 0) {
-                                        break;
-                                }
+                                // if (min_counter == 0) {
+                                //         break;
+                                // }
                         }
                         // aging_tracker.reset_cursor();
 
@@ -232,7 +233,7 @@ class PolicyAging : public MigrationManager {
                         if (move_out_success == true) {
                                 aging_tracker.untrack(min_victim);
                                 delete min_victim;
-                                aging_tracker.reset_cursor();
+                                // aging_tracker.reset_cursor();
                                 if (cxl_memory.get_stats(CXLMemory::TOTAL_HW_CC_USAGE) < hw_cc_budget) {
                                         ret = true;
                                         break;
