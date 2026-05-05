@@ -45,8 +45,8 @@ GATHER_OUTPUT=0
 CHUNK="${1:-0}"
 
 # Sweep dimensions (RW_RATIOS set from CHUNK below)
-POLICIES=(Aging)
-QUERY_TYPES=(scan rmw)
+POLICIES=(AgingAutoScan)
+QUERY_TYPES=(mixed)
 CROSS_RATIOS=(10 50 90)
 ZIPF_THETAS=(0.5 0.7 0.99)
 case "$CHUNK" in
