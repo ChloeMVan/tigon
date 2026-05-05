@@ -17,6 +17,8 @@ FILENAME_RE = re.compile(
 # Content patterns
 CACHE_HIT_RE = re.compile(r"cache hit rate: ([\d.]+)%")
 TOTAL_COMMIT_RE = re.compile(r"total_commit: ([\d.]+)")
+# Matches the final summary line only (starts with "average commit:")
+CXL_HIT_RE = re.compile(r"average commit:.*?remote_access_with_req: \d+ \(([\d.]+)%\)")
 # Worker 0 latency: 204 us (50%) 222 us (75%) 377 us (95%) 451 us (99%)
 WORKER_LATENCY_RE = re.compile(
     r"Worker 0 latency: (\d+) us \(50%\) (\d+) us \(75%\) (\d+) us \(95%\) (\d+) us \(99%\)"
@@ -63,6 +65,10 @@ def parse_file(path: Path) -> dict | None:
     m = AVG_LATENCY_RE.search(text)
     row["avg_latency_us"] = int(m.group(1)) if m else None
 
+    # CXL hit rate: 1 - remote_access_with_req% from the final summary line
+    m = CXL_HIT_RE.search(text)
+    row["cxl_hit_rate"] = round(100.0 - float(m.group(1)), 4) if m else None
+
     return row
 
 
@@ -88,6 +94,7 @@ def main():
             "lat_95_us": metrics["lat_95_us"],
             "lat_99_us": metrics["lat_99_us"],
             "total_commit": metrics["total_commit"],
+            "cxl_hit_rate": metrics["cxl_hit_rate"],
         }
         rows.append(row)
 
@@ -103,6 +110,7 @@ def main():
         "lat_95_us",
         "lat_99_us",
         "total_commit",
+        "cxl_hit_rate",
     ]
     with open(OUTPUT_CSV, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)

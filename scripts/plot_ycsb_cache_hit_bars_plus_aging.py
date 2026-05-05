@@ -41,6 +41,7 @@ COLORS = ["#2ecc71", "#27ae60","#19733e", "#3498db", "#2980b9", "#1B577F", "#db3
 # (csv_column, ylabel, ylim_low, ylim_high) — None for auto
 METRICS = [
     ("cache_hit", "Cache hit rate (%)", 0, 105),
+    ("cxl_hit_rate", "CXL hit rate (%)", 0, 105),
     ("avg_latency_us", "Avg latency (µs)", None, None),
     ("total_commit", "Total commit", None, None),
 ]
@@ -58,6 +59,7 @@ def _row_metrics(row):
         "cache_hit": float(row["cache_hit"]),
         "avg_latency_us": float(row["avg_latency_us"]),
         "total_commit": float(row["total_commit"]),
+        "cxl_hit_rate": float(row["cxl_hit_rate"]) if row.get("cxl_hit_rate") else None,
     }
 
 
@@ -125,8 +127,8 @@ def _plot_grouped_bars(data, groups, group_labels, xlabel, metric_key, ylabel, t
         group_center = i * (group_width + gap_between_groups)
         for j, (policy, query_type) in enumerate(BAR_ORDER):
             key = (group_val, policy, query_type)
-            if key not in data or metric_key not in data[key]:
-                continue
+            # if key not in data or data[key].get(metric_key) is None:
+            #     continue
             x = group_center + j * bar_width
             ax.bar(x, data[key][metric_key], bar_width, color=COLORS[j])
 
@@ -215,20 +217,17 @@ def main():
         "--metric",
         action="append",
         dest="metrics",
-        choices=("cache_hit", "avg_latency", "total_commit"),
+        choices=("cache_hit", "cxl_hit_rate", "avg_latency", "total_commit"),
         help="Metric to plot (repeat for multiple). Default: all.",
     )
     args = parser.parse_args()
     mode = "all" if args.mode == "both" else args.mode
     if args.metrics is None:
-        metrics_to_plot = {"cache_hit", "avg_latency_us", "total_commit"}
+        metrics_to_plot = {"cache_hit", "cxl_hit_rate", "avg_latency_us", "total_commit"}
     else:
         metrics_to_plot = set()
         for m in args.metrics:
-            if m == "avg_latency":
-                metrics_to_plot.add("avg_latency_us")
-            else:
-                metrics_to_plot.add(m)
+            metrics_to_plot.add("avg_latency_us" if m == "avg_latency" else m)
     if mode in ("rw", "all"):
         plot_by_rw_ratio(metrics_to_plot)
     if mode in ("zipf", "all"):
