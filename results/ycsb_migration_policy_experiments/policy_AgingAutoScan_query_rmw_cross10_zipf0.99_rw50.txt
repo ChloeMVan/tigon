@@ -1,0 +1,127 @@
+# YCSB migration policy experiment
+# query_type=rmw rw_ratio=50 zipf_theta=0.99 cross_ratio=10
+# policy=AgingAutoScan when_to_move_out=OnDemand hw_cc_budget_mb=4
+# host_num=2 worker_num=3 keys=200000 repeat=1
+# time_to_run=30 time_to_warmup=10
+# timestamp=2026-05-04T22:37:14-06:00
+---
+killing previous experiments...
+deleting log files...
+initializing cxl memory...
+I0504 22:37:59.208194  4072 bench_ycsb.cpp:66] RW_RATIO = 50, ZIPF_THETA = 0.99, CROSS_RATIO = 10
+I0504 22:37:59.208290  4072 bench_ycsb.cpp:67] checkpoint 0 to 
+I0504 22:37:59.208297  4072 bench_ycsb.cpp:68] cross_part_num 2
+I0504 22:37:59.208304  4072 bench_ycsb.cpp:69] lotus_sp_parallel_exec_commit 0
+I0504 22:37:59.208312  4072 bench_ycsb.cpp:70] granules_per_partition 2000
+I0504 22:37:59.208317  4072 bench_ycsb.cpp:71] keysPerGranule 100
+I0504 22:38:02.814365  4072 Database.h:81] ycsb initialization finished in 3596 milliseconds.
+I0504 22:38:02.955780  4072 CXLMemory.h:57] cxlalloc initialized for thread 0 (global ID = 0) on host 0
+I0504 22:38:02.955812  4072 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0504 22:38:02.961573  4072 MPSCRingBuffer.h:35] entry_struct_size: 2048 entry_num: 8192
+I0504 22:38:02.967310  4072 Coordinator.h:422] Coordinator 0 initializes CXL transport metadata (2 ringbuffers each with 8192 entries (each 2039 Bytes)
+I0504 22:38:02.967330  4072 Coordinator.h:444] created global CXL EBR metadata
+I0504 22:38:02.967466  4072 Coordinator.h:97] WAL Group Commiting off. Log to file /root/pasha_log_non_group_commit.txt using Blackhole Logger
+I0504 22:38:02.967478  4072 Coordinator.h:101] Coordinator initializes 3 workers.
+I0504 22:38:02.967599  4072 Database.h:227] YCSB initializes data migration metadata
+I0504 22:38:02.967609  4072 TwoPLPashaExecutor.h:52] total hardware budget = 5000000 per host = 1975712
+I0504 22:38:02.967931  4077 Coordinator.h:476] Listener 0 on coordinator 0 listening on 192.168.100.2:1234 tcp_no_delay 1 tcp_quick_ack 0
+I0504 22:38:02.968086  4072 Coordinator.h:522] Coordinator 0 failed to connect 1(192.168.100.3:1234)'s listener 0, retry in 5 seconds.
+I0504 22:38:02.968902  4077 Socket.h:69] Disabling nagle
+I0504 22:38:02.968918  4077 Coordinator.h:491] Listener accepted connection from coordinator 1
+I0504 22:38:02.968925  4077 Coordinator.h:494] Listener 0 on coordinator 0 exits.
+I0504 22:38:07.968560  4072 Socket.h:69] Disabling nagle
+I0504 22:38:07.968586  4072 Coordinator.h:531] Coordinator 0 connected to 1
+I0504 22:38:07.968627  4072 Coordinator.h:543] Coordinator 0 connected to all peers.
+I0504 22:38:07.968660  4072 Dispatcher.h:38] IncomingDispatcher 0 coord_id 0
+I0504 22:38:07.968705  4072 Dispatcher.h:210] OutgoingDispatcher 0 coord_id 0
+I0504 22:38:07.968788  4072 Coordinator.h:640] pinned thread to core 0
+I0504 22:38:07.968832  4072 Coordinator.h:216] Coordinator starts to run 4 workers.
+I0504 22:38:07.968808  4078 Dispatcher.h:57] Incoming Dispatcher started, numCoordinators = 2, numWorkers = 3, group id = 0, coordinator = 0
+I0504 22:38:07.968871  4072 Coordinator.h:640] pinned thread to core 1
+I0504 22:38:07.968895  4079 Executor.h:79] Executor 0 starts.
+I0504 22:38:07.968933  4079 CXLMemory.h:57] cxlalloc initialized for thread 1 (global ID = 1) on host 0
+I0504 22:38:07.968946  4079 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 0
+I0504 22:38:07.968966  4072 Coordinator.h:640] pinned thread to core 2
+I0504 22:38:07.968974  4080 Executor.h:79] Executor 1 starts.
+I0504 22:38:07.969110  4072 Coordinator.h:640] pinned thread to core 3
+I0504 22:38:07.969115  4080 CXLMemory.h:57] cxlalloc initialized for thread 2 (global ID = 2) on host 0
+I0504 22:38:07.969190  4080 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 1
+I0504 22:38:07.969127  4081 Executor.h:79] Executor 2 starts.
+I0504 22:38:07.969347  4082 Manager.h:228] Manager(worker id = 3) on the coordinator node started.
+I0504 22:38:07.969355  4081 CXLMemory.h:57] cxlalloc initialized for thread 3 (global ID = 3) on host 0
+I0504 22:38:07.969365  4081 CXL_EBR.h:84] init local EBR metadata, coordinator_id = 0 thread_id = 2
+I0504 22:38:08.969410  4072 Coordinator.h:307] commit: 12803 abort: 13230 (0/13230/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 58032, avg network size: 4.53269, si_in_serializable: 0 0 %, local: 0 %, local_access: 182613, local_cxl_access: 32144 (17.6023%), remote_access: 11575, remote_access_with_req: 3167 (27.3607%), data_move_in: 3280, data_move_out: 0
+I0504 22:38:09.969527  4072 Coordinator.h:307] commit: 12465 abort: 13889 (0/13889/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 47160, avg network size: 3.78339, si_in_serializable: 0 0 %, local: 0 %, local_access: 181938, local_cxl_access: 38192 (20.9918%), remote_access: 13127, remote_access_with_req: 2548 (19.4104%), data_move_in: 2497, data_move_out: 0
+I0504 22:38:10.969637  4072 Coordinator.h:307] commit: 12605 abort: 13737 (0/13737/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 41904, avg network size: 3.3244, si_in_serializable: 0 0 %, local: 0 %, local_access: 182438, local_cxl_access: 40875 (22.4049%), remote_access: 13034, remote_access_with_req: 2281 (17.5004%), data_move_in: 2218, data_move_out: 0
+I0504 22:38:11.969868  4072 Coordinator.h:307] commit: 12763 abort: 14046 (0/14046/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 38352, avg network size: 3.00494, si_in_serializable: 0 0 %, local: 0 %, local_access: 185388, local_cxl_access: 43061 (23.2275%), remote_access: 12297, remote_access_with_req: 2117 (17.2156%), data_move_in: 2255, data_move_out: 0
+I0504 22:38:12.970090  4072 Coordinator.h:307] commit: 12608 abort: 13328 (0/13328/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 37752, avg network size: 2.99429, si_in_serializable: 0 0 %, local: 0 %, local_access: 179597, local_cxl_access: 43438 (24.1864%), remote_access: 12429, remote_access_with_req: 2040 (16.4132%), data_move_in: 2041, data_move_out: 0
+I0504 22:38:13.970201  4072 Coordinator.h:307] commit: 12575 abort: 13766 (0/13766/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 33840, avg network size: 2.69105, si_in_serializable: 0 0 %, local: 0 %, local_access: 182501, local_cxl_access: 44595 (24.4355%), remote_access: 12965, remote_access_with_req: 1875 (14.462%), data_move_in: 1950, data_move_out: 0
+I0504 22:38:14.970286  4072 Coordinator.h:307] commit: 12810 abort: 13798 (0/13798/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 33168, avg network size: 2.58923, si_in_serializable: 0 0 %, local: 0 %, local_access: 184327, local_cxl_access: 46170 (25.0479%), remote_access: 13230, remote_access_with_req: 1862 (14.0741%), data_move_in: 1740, data_move_out: 0
+I0504 22:38:15.970402  4072 Coordinator.h:307] commit: 12676 abort: 13619 (0/13619/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 34032, avg network size: 2.68476, si_in_serializable: 0 0 %, local: 0 %, local_access: 181720, local_cxl_access: 45925 (25.2724%), remote_access: 13376, remote_access_with_req: 1862 (13.9205%), data_move_in: 1787, data_move_out: 0
+I0504 22:38:16.970633  4072 Coordinator.h:307] commit: 12631 abort: 13284 (0/13284/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 31464, avg network size: 2.49101, si_in_serializable: 0 0 %, local: 0 %, local_access: 181634, local_cxl_access: 46610 (25.6615%), remote_access: 11832, remote_access_with_req: 1694 (14.3171%), data_move_in: 1597, data_move_out: 0
+I0504 22:38:17.970853  4072 Coordinator.h:307] commit: 12844 abort: 13624 (0/13624/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 29136, avg network size: 2.26845, si_in_serializable: 0 0 %, local: 0 %, local_access: 183459, local_cxl_access: 47518 (25.9012%), remote_access: 12661, remote_access_with_req: 1645 (12.9927%), data_move_in: 1590, data_move_out: 0
+I0504 22:38:18.971086  4072 Coordinator.h:307] commit: 12622 abort: 13743 (0/13743/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 28224, avg network size: 2.2361, si_in_serializable: 0 0 %, local: 0 %, local_access: 181892, local_cxl_access: 47786 (26.2716%), remote_access: 12464, remote_access_with_req: 1541 (12.3636%), data_move_in: 1640, data_move_out: 0
+I0504 22:38:19.971307  4072 Coordinator.h:307] commit: 12695 abort: 13389 (0/13389/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 28584, avg network size: 2.2516, si_in_serializable: 0 0 %, local: 0 %, local_access: 179816, local_cxl_access: 48218 (26.8152%), remote_access: 13996, remote_access_with_req: 1586 (11.3318%), data_move_in: 1500, data_move_out: 0
+I0504 22:38:20.971385  4072 Coordinator.h:307] commit: 12764 abort: 13544 (0/13544/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 29904, avg network size: 2.34284, si_in_serializable: 0 0 %, local: 0 %, local_access: 181202, local_cxl_access: 48673 (26.8612%), remote_access: 13100, remote_access_with_req: 1590 (12.1374%), data_move_in: 1486, data_move_out: 0
+I0504 22:38:21.971506  4072 Coordinator.h:307] commit: 12620 abort: 14162 (0/14162/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 26448, avg network size: 2.09572, si_in_serializable: 0 0 %, local: 0 %, local_access: 182871, local_cxl_access: 48569 (26.5592%), remote_access: 13680, remote_access_with_req: 1478 (10.8041%), data_move_in: 1500, data_move_out: 0
+I0504 22:38:22.971614  4072 Coordinator.h:307] commit: 12792 abort: 13156 (0/13156/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 24528, avg network size: 1.91745, si_in_serializable: 0 0 %, local: 0 %, local_access: 181806, local_cxl_access: 49495 (27.2241%), remote_access: 13025, remote_access_with_req: 1392 (10.6871%), data_move_in: 1444, data_move_out: 0
+I0504 22:38:23.971722  4072 Coordinator.h:307] commit: 12631 abort: 14314 (0/14314/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 24048, avg network size: 1.90389, si_in_serializable: 0 0 %, local: 0 %, local_access: 182797, local_cxl_access: 49254 (26.9446%), remote_access: 13297, remote_access_with_req: 1369 (10.2956%), data_move_in: 1427, data_move_out: 0
+I0504 22:38:24.971827  4072 Coordinator.h:307] commit: 12751 abort: 13780 (0/13780/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 23928, avg network size: 1.87656, si_in_serializable: 0 0 %, local: 0 %, local_access: 184406, local_cxl_access: 50050 (27.1412%), remote_access: 12001, remote_access_with_req: 1354 (11.2824%), data_move_in: 1374, data_move_out: 0
+I0504 22:38:25.971943  4072 Coordinator.h:307] commit: 12646 abort: 13649 (0/13649/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 23712, avg network size: 1.87506, si_in_serializable: 0 0 %, local: 0 %, local_access: 181512, local_cxl_access: 49906 (27.4946%), remote_access: 13095, remote_access_with_req: 1306 (9.97327%), data_move_in: 1335, data_move_out: 0
+I0504 22:38:26.972016  4072 Coordinator.h:307] commit: 12589 abort: 13423 (0/13423/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 24696, avg network size: 1.96171, si_in_serializable: 0 0 %, local: 0 %, local_access: 179977, local_cxl_access: 49796 (27.668%), remote_access: 13052, remote_access_with_req: 1348 (10.3279%), data_move_in: 1313, data_move_out: 0
+I0504 22:38:27.972133  4072 Coordinator.h:307] commit: 12863 abort: 13292 (0/13292/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 23352, avg network size: 1.81544, si_in_serializable: 0 0 %, local: 0 %, local_access: 182423, local_cxl_access: 51195 (28.0639%), remote_access: 12631, remote_access_with_req: 1271 (10.0625%), data_move_in: 1400, data_move_out: 0
+I0504 22:38:28.972239  4072 Coordinator.h:307] commit: 12677 abort: 13800 (0/13800/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 23184, avg network size: 1.82882, si_in_serializable: 0 0 %, local: 0 %, local_access: 182976, local_cxl_access: 50582 (27.6441%), remote_access: 12222, remote_access_with_req: 1267 (10.3666%), data_move_in: 1381, data_move_out: 0
+I0504 22:38:29.972357  4072 Coordinator.h:307] commit: 12747 abort: 13774 (0/13774/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 22200, avg network size: 1.74159, si_in_serializable: 0 0 %, local: 0 %, local_access: 183381, local_cxl_access: 51437 (28.0493%), remote_access: 12928, remote_access_with_req: 1230 (9.51423%), data_move_in: 1194, data_move_out: 0
+I0504 22:38:30.972476  4072 Coordinator.h:307] commit: 12870 abort: 13721 (0/13721/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 21840, avg network size: 1.69697, si_in_serializable: 0 0 %, local: 0 %, local_access: 185752, local_cxl_access: 52006 (27.9975%), remote_access: 12186, remote_access_with_req: 1196 (9.81454%), data_move_in: 1186, data_move_out: 0
+I0504 22:38:31.972558  4072 Coordinator.h:307] commit: 12590 abort: 13449 (0/13449/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 21816, avg network size: 1.7328, si_in_serializable: 0 0 %, local: 0 %, local_access: 181725, local_cxl_access: 51213 (28.1816%), remote_access: 12534, remote_access_with_req: 1163 (9.27876%), data_move_in: 1225, data_move_out: 0
+I0504 22:38:32.972793  4072 Coordinator.h:307] commit: 12843 abort: 13371 (0/13371/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 20544, avg network size: 1.59963, si_in_serializable: 0 0 %, local: 0 %, local_access: 182692, local_cxl_access: 52074 (28.5037%), remote_access: 13296, remote_access_with_req: 1136 (8.54392%), data_move_in: 1211, data_move_out: 0
+I0504 22:38:33.972883  4072 Coordinator.h:307] commit: 12728 abort: 13845 (0/13845/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 21504, avg network size: 1.6895, si_in_serializable: 0 0 %, local: 0 %, local_access: 183233, local_cxl_access: 52100 (28.4337%), remote_access: 12828, remote_access_with_req: 1195 (9.31556%), data_move_in: 1156, data_move_out: 0
+I0504 22:38:34.972993  4072 Coordinator.h:307] commit: 12907 abort: 13322 (0/13322/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 20568, avg network size: 1.59355, si_in_serializable: 0 0 %, local: 0 %, local_access: 184090, local_cxl_access: 52754 (28.6566%), remote_access: 12401, remote_access_with_req: 1144 (9.22506%), data_move_in: 1127, data_move_out: 0
+I0504 22:38:35.973101  4072 Coordinator.h:307] commit: 12736 abort: 14104 (0/14104/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 19560, avg network size: 1.5358, si_in_serializable: 0 0 %, local: 0 %, local_access: 183735, local_cxl_access: 52297 (28.4633%), remote_access: 13166, remote_access_with_req: 1108 (8.41562%), data_move_in: 1106, data_move_out: 0
+I0504 22:38:36.973217  4072 Coordinator.h:307] commit: 12637 abort: 13558 (0/13558/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 20688, avg network size: 1.6371, si_in_serializable: 0 0 %, local: 0 %, local_access: 182145, local_cxl_access: 52198 (28.6574%), remote_access: 12950, remote_access_with_req: 1135 (8.76448%), data_move_in: 1169, data_move_out: 0
+I0504 22:38:37.973335  4072 Coordinator.h:307] commit: 12797 abort: 13331 (0/13331/0), persistence latency 0, txn latency 0, queued lock latency 0, lock latency 0, active_txns 0, n_failed_read_lock 0, n_failed_write_lock 0, n_failed_cmd_not_ready 0, n_failed_no_cmd 0, network size: 20376, avg network size: 1.59225, si_in_serializable: 0 0 %, local: 0 %, local_access: 181111, local_cxl_access: 52577 (29.0303%), remote_access: 12507, remote_access_with_req: 1114 (8.90701%), data_move_in: 1045, data_move_out: 0
+I0504 22:38:37.973387  4072 Coordinator.h:345] average commit: 12725.2 abort: 13636.4 (0/13636.4/0), abort_rate: 0.517281, network size: 469704, avg network size: 1.84556, si_in_serializable: 0 0 %, local: 0 %, local_access: 3649542, local_cxl_access: 1012180 (27.7344%), remote_access: 257359, remote_access_with_req: 25923 (10.0727%), data_move_in: 26219, data_move_out: 0
+I0504 22:38:37.973513  4079 Executor.h:217] [progress] Executor 0 entering CLEANUP wait.
+I0504 22:38:37.973640  4080 Executor.h:217] [progress] Executor 1 entering CLEANUP wait.
+I0504 22:38:37.973409  4072 Executor.h:243] Worker 0 latency: 135 us (50%) 253 us (75%) 673 us (95%) 1334 us (99%). dist txn latency: 251 us (50%) 449 us (75%) 1223 us (95%) 2749 us (99%)  avg 417 us . local txn latency: 134 us (50%) 227 us (75%) 661 us (95%) 1320 us (99%)  avg 217 us. txn commit latency: 135 us (50%) 260 us (75%) 693 us (95%) 1307 us (99%) avg 232 us.
+ LOCAL txn stall 0 us,  local_work 92 us,  remote_work 0 us,  commit_work 20 us,  commit_prepare 11 us,  commit_persistence 1 us,  commit_write_back 2 us,  commit_replication 0 us,  commit_release_lock 3 us 
+ DIST txn stall 0 us,  local_work 98 us,  remote_work 56 us,  commit_work 21 us,  commit_prepare 11 us,  commit_persistence 0 us,  commit_write_back 2 us,  commit_replication 0 us,  commit_release_lock 4 us 
+I0504 22:38:37.974637  4072 Executor.h:273] message stats, type: 0 count: 0 total size: 0
+I0504 22:38:37.974643  4072 Executor.h:273] message stats, type: 1 count: 0 total size: 0
+I0504 22:38:37.974650  4072 Executor.h:273] message stats, type: 2 count: 0 total size: 0
+I0504 22:38:37.974656  4072 Executor.h:273] message stats, type: 3 count: 0 total size: 0
+I0504 22:38:37.974663  4072 Executor.h:273] message stats, type: 4 count: 16036 total size: 384864
+I0504 22:38:37.974669  4072 Executor.h:273] message stats, type: 5 count: 15915 total size: 206895
+I0504 22:38:37.974676  4072 Executor.h:273] message stats, type: 6 count: 0 total size: 0
+I0504 22:38:37.974682  4072 Executor.h:273] message stats, type: 7 count: 0 total size: 0
+I0504 22:38:37.974689  4072 Executor.h:273] message stats, type: 8 count: 0 total size: 0
+I0504 22:38:37.974695  4072 Executor.h:273] message stats, type: 9 count: 0 total size: 0
+I0504 22:38:37.974701  4072 Executor.h:273] message stats, type: 10 count: 0 total size: 0
+I0504 22:38:37.974709  4072 Executor.h:273] message stats, type: 11 count: 0 total size: 0
+I0504 22:38:37.974714  4072 Executor.h:275] [progress] Executor 0: message stats done, entering save_cdf (path empty=1).
+I0504 22:38:37.974721  4072 Executor.h:277] [progress] Executor 0: save_cdf done, entering correctness_test.
+I0504 22:38:37.974727  4072 Executor.h:280] [progress] Executor 0: correctness_test done, onExit complete.
+I0504 22:38:37.974742  4081 Executor.h:217] [progress] Executor 2 entering CLEANUP wait.
+I0504 22:38:37.974939  4081 Executor.h:228] [progress] Executor 2 CLEANUP done, processing final request.
+I0504 22:38:37.974941  4079 Executor.h:228] [progress] Executor 0 CLEANUP done, processing final request.
+I0504 22:38:37.975020  4081 Executor.h:232] [progress] Executor 2 calling global_ebr_meta->print_statistics().
+I0504 22:38:37.975030  4081 CXL_EBR.h:183] EBR Statistics for worker 2: GC size 100% = 0 99% = 0 50% = 0 avg = 0 max = 0
+I0504 22:38:37.975032  4079 Executor.h:232] [progress] Executor 0 calling global_ebr_meta->print_statistics().
+I0504 22:38:37.975044  4081 Executor.h:234] [progress] Executor 2 print_statistics done.
+I0504 22:38:37.975050  4081 Executor.h:236] Executor 2 exits.
+I0504 22:38:37.975049  4079 CXL_EBR.h:183] EBR Statistics for worker 0: GC size 100% = 0 99% = 0 50% = 0 avg = 0 max = 0
+I0504 22:38:37.975066  4079 Executor.h:234] [progress] Executor 0 print_statistics done.
+I0504 22:38:37.975072  4079 Executor.h:236] Executor 0 exits.
+I0504 22:38:37.974941  4080 Executor.h:228] [progress] Executor 1 CLEANUP done, processing final request.
+I0504 22:38:37.975150  4080 Executor.h:232] [progress] Executor 1 calling global_ebr_meta->print_statistics().
+I0504 22:38:37.975205  4080 CXL_EBR.h:183] EBR Statistics for worker 1: GC size 100% = 0 99% = 0 50% = 0 avg = 0 max = 0
+I0504 22:38:37.975256  4080 Executor.h:234] [progress] Executor 1 print_statistics done.
+I0504 22:38:37.975302  4080 Executor.h:236] Executor 1 exits.
+I0504 22:38:37.975471  4082 Manager.h:230] Manager(worker id = 3) on the coordinator node exits.
+I0504 22:38:37.975550  4072 CXLMemory.h:227] local CXL memory usage: size_index_usage: 1336120 size_metadata_usage: 377392 size_data_usage: 49532700 size_transport_usage: 33554544 size_misc_usage: 344 total_size_hw_cc_usage: 1713856 total_usage: 84801100
+I0504 22:38:37.975564  4072 SCCManager.h:40] software cache-coherence statistics: num_clflush: 284262 num_clwb: 1541879 num_cache_hit: 4352694 num_cache_miss: 284262 cache hit rate: 93.8696%
+I0504 22:38:37.977169  4072 Coordinator.h:610] Global Stats: total_commit: 25486.7 total_size_index_usage: 2735304 total_size_metadata_usage: 753504 total_size_data_usage: 98897400 total_size_transport_usage: 33554544 total_size_misc_usage: 344 total_hw_cc_usage: 3489152 total_usage: 135941096
+I0504 22:38:38.977252  4078 Dispatcher.h:154] Incoming Dispatcher exits, network size: 5187106. socket_message_recv_latency(50th) 1 socket_message_recv_latency(75th) 2 socket_message_recv_latency(95th) 3 socket_message_recv_latency(99th) 5 internal_message_recv_latency(50th) 0 socket_message_recv_cnt 3756 socket_read_syscall 25098708 internal_message_recv_cnt 0
+I0504 22:38:39.042863  4072 Coordinator.h:155] round_trip_latency 64 (50th) 67 (75th) 74 (95th) 74 (99th) 
+I0504 22:38:39.042933  4072 Coordinator.h:407] Coordinator exits.
+killing previous experiments...
