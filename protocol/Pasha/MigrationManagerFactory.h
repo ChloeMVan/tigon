@@ -13,8 +13,8 @@
 #include "protocol/Pasha/PolicyLRU.h"
 #include "protocol/Pasha/PolicyClock.h"
 #include "protocol/Pasha/PolicyAging.h"
-#include "protocol/Pasha/PolicyWorkloadAdaptive.h"
-#include "protocol/Pasha/PolicyAdaptiveAging.h"
+#include "protocol/Pasha/PolicyAgingScanAware.h"
+#include "protocol/Pasha/PolicyAgingAutoScan.h"
 
 #include "protocol/SundialPasha/SundialPashaHelper.h"
 
@@ -75,8 +75,8 @@ class MigrationManagerFactory {
                                         partition_num,
                                         when_to_move_out,
                                         hw_cc_budget);
-                        } else if (migration_policy == "WorkloadAdaptive") {
-                                migration_manager = new PolicyWorkloadAdaptive(
+                        } else if (migration_policy == "AgingScanAware") {
+                                migration_manager = new PolicyAgingScanAware(
                                         std::bind(&SundialPashaHelper::move_from_partition_to_shared_region, sundial_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
                                         std::bind(&SundialPashaHelper::move_from_shared_region_to_partition, sundial_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
                                         std::bind(&SundialPashaHelper::delete_and_update_next_key_info, sundial_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
@@ -84,8 +84,8 @@ class MigrationManagerFactory {
                                         partition_num,
                                         when_to_move_out,
                                         hw_cc_budget);
-                        } else if (migration_policy == "AdaptiveAging") {
-                                migration_manager = new PolicyAdaptiveAging(
+                        } else if (migration_policy == "AgingAutoScan") {
+                                migration_manager = new PolicyAgingAutoScan(
                                         std::bind(&SundialPashaHelper::move_from_partition_to_shared_region, sundial_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
                                         std::bind(&SundialPashaHelper::move_from_shared_region_to_partition, sundial_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
                                         std::bind(&SundialPashaHelper::delete_and_update_next_key_info, sundial_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
@@ -143,8 +143,8 @@ class MigrationManagerFactory {
                                         partition_num,
                                         when_to_move_out,
                                         hw_cc_budget);
-                        } else if (migration_policy == "WorkloadAdaptive") {
-                                migration_manager = new PolicyWorkloadAdaptive(
+                        } else if (migration_policy == "AgingScanAware") {
+                                migration_manager = new PolicyAgingScanAware(
                                         std::bind(&TwoPLPashaHelper::move_from_partition_to_shared_region, twopl_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
                                         std::bind(&TwoPLPashaHelper::move_from_shared_region_to_partition, twopl_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
                                         std::bind(&TwoPLPashaHelper::delete_and_update_next_key_info, twopl_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
@@ -152,8 +152,8 @@ class MigrationManagerFactory {
                                         partition_num,
                                         when_to_move_out,
                                         hw_cc_budget);
-                        } else if (migration_policy == "AdaptiveAging") {
-                                migration_manager = new PolicyAdaptiveAging(
+                        } else if (migration_policy == "AgingAutoScan") {
+                                migration_manager = new PolicyAgingAutoScan(
                                         std::bind(&TwoPLPashaHelper::move_from_partition_to_shared_region, twopl_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
                                         std::bind(&TwoPLPashaHelper::move_from_shared_region_to_partition, twopl_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
                                         std::bind(&TwoPLPashaHelper::delete_and_update_next_key_info, twopl_pasha_global_helper, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5),
