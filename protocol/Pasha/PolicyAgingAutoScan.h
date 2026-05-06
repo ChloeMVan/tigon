@@ -15,7 +15,7 @@ namespace star
 
 class PolicyAgingAutoScan : public MigrationManager {
     public:
-        static constexpr uint32_t SCAN_STREAK_THRESHOLD = 4;
+        static constexpr uint32_t SCAN_STREAK_THRESHOLD = 5;
 
         struct AgingMeta {
                 uint8_t counter = 0;
