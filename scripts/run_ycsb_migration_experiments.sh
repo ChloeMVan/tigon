@@ -45,7 +45,7 @@ GATHER_OUTPUT=0
 CHUNK="${1:-0}"
 
 # Sweep dimensions (RW_RATIOS set from CHUNK below)
-POLICIES=(Aging Clock LRU)
+POLICIES=(Aging Clock LRU AgingAutoScan)
 QUERY_TYPES=(scan rmw mixed)
 CROSS_RATIOS=(10 50 90)
 ZIPF_THETAS=(0.5 0.7 0.99)
