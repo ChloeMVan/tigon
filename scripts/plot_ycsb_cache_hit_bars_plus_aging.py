@@ -17,26 +17,35 @@ import csv
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-RESULTS_DIR = Path(__file__).resolve().parent.parent / "results" / "ycsb_migration_policy_experiments"
-CSV_PATH = RESULTS_DIR / "ycsb_migration_experiments.csv"
+RESULTS_DIR = Path(__file__).resolve().parent.parent / "results" / "ycsb_migration_policy_experiments/scanaware"
+CSV_PATH = Path(__file__).resolve().parent.parent / "results" / "ycsb_migration_policy_experiments/" / "ycsb_migration_experiments.csv"
 
 # Bar order within each group: (policy, query_type)
 BAR_ORDER = [
-    ("LRU", "rmw"),
-    ("LRU", "scan"),
-    ("LRU", "mixed"),
-    ("Clock", "rmw"),
-    ("Clock", "scan"),
-    ("Clock", "mixed"),
-    ("Aging", "rmw"),
-    ("Aging", "scan"),
-    ("Aging", "mixed"),
+    # ("LRU", "rmw"),
+    # ("LRU", "scan"),
+    # ("LRU", "mixed"),
+    # ("Clock", "rmw"),
+    # ("Clock", "scan"),
+    # ("Clock", "mixed"),
+    # ("Aging", "rmw"),
+    # ("Aging", "scan"),
+    # ("Aging", "mixed"),
+    ("AgingScanAware", "rmw"),
+    ("AgingScanAware", "scan"),
+    ("AgingScanAware", "mixed"),
+    ("AgingAutoScan", "rmw"),
+    ("AgingAutoScan", "scan"),
+    ("AgingAutoScan", "mixed"),
+    
 ]
 
 RW_RATIOS = [10, 50, 90]
 ZIPF_THETAS = [0.5, 0.7, 0.99]
-
-COLORS = ["#2ecc71", "#27ae60","#19733e", "#3498db", "#2980b9", "#1B577F", "#db3434", "#aa2828", "#6c1818"]
+#  "#3498db", "#2980b9", "#1B577F", "#db3434", "#aa2828", "#6c1818", 
+# "#2ecc71", "#27ae60","#19733e", LRU
+# "#fa55ec", "#b63fac", "#882e81",, scan aware
+COLORS = [ "#fa55ec", "#b63fac", "#882e81", "#5563fa", "#444fc6", "#2f378f"]
 
 # (csv_column, ylabel, ylim_low, ylim_high) — None for auto
 METRICS = [
@@ -101,21 +110,50 @@ def load_data_by_cross():
 def make_legend(ax):
     from matplotlib.patches import Patch
     legend_elements = [
-        Patch(facecolor=COLORS[0], label="LRU, rmw"),
-        Patch(facecolor=COLORS[1], label="LRU, scan"),
-        Patch(facecolor=COLORS[2], label="LRU, mixed"),
-        Patch(facecolor=COLORS[3], label="Clock, rmw"),
-        Patch(facecolor=COLORS[4], label="Clock, scan"),
-        Patch(facecolor=COLORS[5], label="Clock, mixed"),
-        Patch(facecolor=COLORS[6], label="Aging, rmw"),
-        Patch(facecolor=COLORS[7], label="Aging, scan"),
-        Patch(facecolor=COLORS[8], label="Aging, mixed"),
+        # Patch(facecolor=COLORS[0], label="LRU, rmw"),
+        # Patch(facecolor=COLORS[1], label="LRU, scan"),
+        # Patch(facecolor=COLORS[2], label="LRU, mixed"),
+        # Patch(facecolor=COLORS[3], label="Clock, rmw"),
+        # Patch(facecolor=COLORS[4], label="Clock, scan"),
+        # Patch(facecolor=COLORS[5], label="Clock, mixed"),
+        # Patch(facecolor=COLORS[6], label="Aging, rmw"),
+        # Patch(facecolor=COLORS[7], label="Aging, scan"),
+        # Patch(facecolor=COLORS[8], label="Aging, mixed"),
+        # Patch(facecolor=COLORS[9], label="AgingScanAware, rmw"),
+        # Patch(facecolor=COLORS[10], label="AgingScanAware, scan"),
+        # Patch(facecolor=COLORS[11], label="AgingScanAware, mixed"),
+        # Patch(facecolor=COLORS[12], label="AgingAutoScan, rmw"),
+        # Patch(facecolor=COLORS[13], label="AgingAutoScan, scan"),
+        # Patch(facecolor=COLORS[14], label="AgingAutoScan, mixed"),
+        # Patch(facecolor=COLORS[0], label="Clock, rmw"),
+        # Patch(facecolor=COLORS[1], label="Clock, scan"),
+        # Patch(facecolor=COLORS[2], label="Clock, mixed"),
+        # Patch(facecolor=COLORS[3], label="Aging, rmw"),
+        # Patch(facecolor=COLORS[4], label="Aging, scan"),
+        # Patch(facecolor=COLORS[5], label="Aging, mixed"),
+        Patch(facecolor=COLORS[0], label="AgingScanAware, rmw"),
+        Patch(facecolor=COLORS[1], label="AgingScanAware, scan"),
+        Patch(facecolor=COLORS[2], label="AgingScanAware, mixed"),
+        Patch(facecolor=COLORS[3], label="AgingAutoScan, rmw"),
+        Patch(facecolor=COLORS[4], label="AgingAutoScan, scan"),
+        Patch(facecolor=COLORS[5], label="AgingAutoScan, mixed"),
     ]
     ax.legend(handles=legend_elements, loc="upper right", ncol=2)
 
 
 def _plot_grouped_bars(data, groups, group_labels, xlabel, metric_key, ylabel, title, output_stem, ylim_low=None, ylim_high=None):
     """Draw one bar chart and save as PDF + PNG."""
+    filtered = [
+        (g, lbl) for g, lbl in zip(groups, group_labels)
+        if all(
+            (g, policy, qt) in data and data[(g, policy, qt)].get(metric_key) is not None
+            for policy, qt in BAR_ORDER
+        )
+    ]
+    if not filtered:
+        print(f"No data for {output_stem}, skipping.")
+        return
+    groups, group_labels = zip(*filtered)
     n_groups = len(groups)
     n_bars_per_group = len(BAR_ORDER)
     bar_width = 0.2
